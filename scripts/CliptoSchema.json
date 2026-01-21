@@ -1,0 +1,91 @@
+{
+  "schemas": [
+    {
+      "file": "./js/c_auth~c_auth_e~c_auth_m~c_auth_z~c_home.js",
+      "version": 42,
+      "stores": {
+        "settings": "++id",
+        "fileRefs": "++id,name,folder,path,firestoreId,deleted,[path+name]",
+        "clips": "++id,createDate,modifyDate,text,firestoreId,snippetId,snippet,deleted,textType,*tagIds,tagIdsCount,*snippetSetsIds,snippetSetsIdsCount,tracked,fav,filesCount,[tagIdsCount+deleted],[tracked+deleted],[fav+deleted],[snippet+deleted],[tracked+deleted+fav+tagIdsCount+snippetSetsIdsCount+filesCount+snippet+title]",
+        "publicLinks": "++id,uid",
+        "filters": "++id,uid,type",
+        "tags": "++id",
+        "users": "++id,firebaseId"
+      }
+    },
+    {
+      "file": "./js/c_desktop.js",
+      "version": 42,
+      "stores": {
+        "settings": "++id",
+        "fileRefs": "++id,name,folder,path,firestoreId,deleted,[path+name]",
+        "clips": "++id,createDate,modifyDate,text,firestoreId,snippetId,snippet,deleted,textType,*tagIds,tagIdsCount,*snippetSetsIds,snippetSetsIdsCount,tracked,fav,filesCount,[tagIdsCount+deleted],[tracked+deleted],[fav+deleted],[snippet+deleted],[tracked+deleted+fav+tagIdsCount+snippetSetsIdsCount+filesCount+snippet+title]",
+        "publicLinks": "++id,uid",
+        "filters": "++id,uid,type",
+        "tags": "++id",
+        "users": "++id,firebaseId"
+      }
+    },
+    {
+      "file": "./js/c_editor.js",
+      "version": 42,
+      "stores": {
+        "settings": "++id",
+        "fileRefs": "++id,name,folder,path,firestoreId,deleted,[path+name]",
+        "clips": "++id,createDate,modifyDate,text,firestoreId,snippetId,snippet,deleted,textType,*tagIds,tagIdsCount,*snippetSetsIds,snippetSetsIdsCount,tracked,fav,filesCount,[tagIdsCount+deleted],[tracked+deleted],[fav+deleted],[snippet+deleted],[tracked+deleted+fav+tagIdsCount+snippetSetsIdsCount+filesCount+snippet+title]",
+        "publicLinks": "++id,uid",
+        "filters": "++id,uid,type",
+        "tags": "++id",
+        "users": "++id,firebaseId"
+      }
+    },
+    {
+      "file": "./js/c_link.js",
+      "version": 42,
+      "stores": {
+        "settings": "++id",
+        "fileRefs": "++id,name,folder,path,firestoreId,deleted,[path+name]",
+        "clips": "++id,createDate,modifyDate,text,firestoreId,snippetId,snippet,deleted,textType,*tagIds,tagIdsCount,*snippetSetsIds,snippetSetsIdsCount,tracked,fav,filesCount,[tagIdsCount+deleted],[tracked+deleted],[fav+deleted],[snippet+deleted],[tracked+deleted+fav+tagIdsCount+snippetSetsIdsCount+filesCount+snippet+title]",
+        "publicLinks": "++id,uid",
+        "filters": "++id,uid,type",
+        "tags": "++id",
+        "users": "++id,firebaseId"
+      }
+    },
+    {
+      "file": "./js/vendors~c_auth~c_auth_e~c_auth_m~c_auth_z~c_desktop~c_editor~c_home~c_link.js",
+      "version": 1,
+      "stores": {
+        "dbnames": "name"
+      }
+    }
+  ],
+  "source_version": "7.2.17",
+  "extracted_at": "2026-01-21 15:34:07",
+  "export_files": [
+    "./electron-main.js",
+    "./js/10.js",
+    "./js/14.js",
+    "./js/17.js",
+    "./js/18.js",
+    "./js/20.js",
+    "./js/21.js",
+    "./js/22.js",
+    "./js/24.js",
+    "./js/26.js"
+  ],
+  "model_files": [
+    "./js/c_auth_e.js",
+    "./js/c_auth_m.js",
+    "./js/c_auth_z.js",
+    "./js/c_auth.js",
+    "./js/c_desktop.js"
+  ],
+  "database_files": [
+    "./js/c_auth~c_auth_e~c_auth_m~c_auth_z~c_home.js",
+    "./js/c_desktop.js",
+    "./js/c_editor.js",
+    "./js/c_link.js",
+    "./js/vendors~c_auth~c_auth_e~c_auth_m~c_auth_z~c_desktop~c_editor~c_home~c_link.js"
+  ]
+}
