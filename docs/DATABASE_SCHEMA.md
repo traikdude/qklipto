@@ -11,6 +11,17 @@
 - **Schema Version:** 42
 - **Browser API:** IndexedDB (embedded in Electron)
 
+### Android Comparison
+- **Mobile Tech:** ObjectBox (NoSQL)
+- **Compatibility:** High (Mapped Fields)
+- **Mapping:**
+  - `clips` ↔ `ClipBox`
+  - `users` ↔ `UserBox`
+  - `filters` ↔ `FilterBox`
+  - `settings` ↔ `SettingsBox`
+  - `fileRefs` ↔ `FileRefBox`
+
+
 ---
 
 ## 📋 Complete Schema (v42)
