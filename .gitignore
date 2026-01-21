@@ -12,10 +12,11 @@ clipto-*.exe
 # ============================================
 # Extracted Source Code
 # ============================================
-CliptoDesktopSource/
+**/CliptoDesktopSource/
 extracted-source/
 source/
 android-source/
+android-source-zip/
 clipto-android-main/
 
 # ============================================
