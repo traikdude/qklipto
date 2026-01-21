@@ -1,0 +1,126 @@
+# QKlipto .gitignore
+
+# ============================================
+# Installation Files
+# ============================================
+clipto-*.exe
+*.exe
+*.msi
+*.dmg
+*.deb
+
+# ============================================
+# Extracted Source Code
+# ============================================
+CliptoDesktopSource/
+extracted-source/
+source/
+android-source/
+clipto-android-main/
+
+# ============================================
+# Build Artifacts
+# ============================================
+*.apk
+*.aab
+build/
+dist/
+out/
+
+# ============================================
+# Node Modules
+# ============================================
+node_modules/
+package-lock.json
+yarn.lock
+
+# ============================================
+# Clipto Data & Backups
+# ============================================
+CliptoBackups/
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# ============================================
+# Generated Reports
+# ============================================
+SourceAnalysisReport.md
+DatabaseAnalysisReport.md
+*HASH_REPORT.txt
+
+# ============================================
+# OS Files
+# ============================================
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.directory
+
+# ============================================
+# IDE & Editors
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.vs/
+
+# ============================================
+# Logs
+# ============================================
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================
+# Environment
+# ============================================
+.env
+.env.local
+.env.*.local
+
+# ============================================
+# Temporary Files
+# ============================================
+*.tmp
+*.temp
+~$*
+
+# ============================================
+# Archives
+# ============================================
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# EXCEPTION: Keep specific source archives if needed
+# !clipto-android-source.zip
+
+# ============================================
+# Personal Data
+# ============================================
+# Never commit personal Clipto databases or backups
+**/AppData/Roaming/Clipto/**
+**/OneDrive/CliptoBackups/**
+
+# ============================================
+# Testing
+# ============================================
+test-data/
+*.test.db

@@ -1,0 +1,28 @@
+{
+  "name": "qklipto",
+  "keywords": [
+    "clipto",
+    "resurrection",
+    "electron",
+    "sync",
+    "firebase",
+    "abandoned-software"
+  ],
+  "author": "Clipto Community",
+  "description": "Clipto Resurrection Toolkit - Custom sync solution for abandoned Clipto Pro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/qklipto.git"
+  },
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "phase1.2": "pwsh scripts/Phase1.2_AirGapFirewall.ps1",
+    "phase1.1": "pwsh scripts/Phase1.1_Installation.ps1",
+    "phase2.1": "pwsh scripts/Phase2.1_ExtractSource.ps1",
+    "phase2.2": "pwsh scripts/Phase2.2_AnalyzeSource.ps1",
+    "phase1.3": "pwsh scripts/Phase1.3_BackupAutomation.ps1",
+    "phase0.2": "pwsh scripts/Phase0.2_DownloadInstaller.ps1",
+    "phase0.1": "pwsh scripts/Phase0.1_DataDiscovery.ps1"
+  }
+}
