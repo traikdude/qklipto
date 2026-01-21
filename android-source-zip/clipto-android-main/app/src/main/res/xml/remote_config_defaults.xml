@@ -516,7 +516,7 @@
     </entry>
     <entry>
         <key>youtube_data_api_key</key>
-        <value>AIzaSyCQVM4P1xcIJtrWkOTmAoMVcTlf4rc_Z_Y</value>
+        <value>YOUR_YOUTUBE_API_KEY_HERE</value>
     </entry>
     <entry>
         <key>note_link_click_radius</key>
