@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="rune_clipboard" viewBox="0 0 24 24">
+    <path d="M6 7C5.33333 7 4 7.4 4 9V19C4 19.6667 4.4 21 6 21H18C19.6 21 20 19.6667 20 19V9C20 7.4 18.6667 7 18 7M10 5C10 4.33333 10.4 3 12 3C13.6 3 14 4.33333 14 5L15 6V7H9V6L10 5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>

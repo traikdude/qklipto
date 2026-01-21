@@ -1,0 +1,3 @@
+// publishing { ... } disabled for local build
+// This file used to handle Maven publication but is incompatible with Gradle 7
+println "Skipping AAR publication config"

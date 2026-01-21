@@ -1,0 +1,2 @@
+// publishing { ... } disabled for local build
+println "Skipping JAR publication config"
