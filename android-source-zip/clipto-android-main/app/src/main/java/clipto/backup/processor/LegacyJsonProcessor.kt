@@ -12,8 +12,24 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
 import javax.inject.Inject
+import clipto.AppContext
+import clipto.domain.Filter
+import clipto.extensions.createTag
+import clipto.repository.IFilterRepository
 
-class LegacyJsonProcessor @Inject constructor() : BackupProcessor() {
+open class LegacyJsonProcessor @Inject constructor() : BackupProcessor() {
+
+    open fun findTagByName(name: String): Filter? {
+        return try {
+            AppContext.get().getFilters().findFilterByTagName(name)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    open fun getHelperFilterRepository(): IFilterRepository {
+        return AppContext.get().filterRepository.get()
+    }
 
     override fun restore(contentResolver: ContentResolver, uri: Uri): IBackupProcessor.BackupStats {
         val restoredClips = mutableListOf<Clip>()
@@ -65,11 +81,34 @@ class LegacyJsonProcessor @Inject constructor() : BackupProcessor() {
                     
                     clip.fav = item.optBoolean("fav", false)
                     
-                    // Tags - Complex mapping. 
-                    // Windows: ["tag1", "tag2"]
-                    // Android: Needs tagIds.
-                    // We currently skip tag linking to keep it simple, or store raw tags in a text field
-                    // clip.tags = item.optString("tags", "") 
+                    // Tags Mapping
+                    val tagsJson = item.optJSONArray("tags")
+                    val clipTagIds = mutableListOf<String>()
+                    if (tagsJson != null && tagsJson.length() > 0) {
+                        for (j in 0 until tagsJson.length()) {
+                            val tagName = tagsJson.optString(j)
+                            if (tagName.isNotEmpty()) {
+                                // 1. Try to find existing tag by name
+                                var tag = findTagByName(tagName)
+                                
+                                // 2. If not found, create new one
+                                if (tag == null) {
+                                    val newTag = Filter.createTag(tagName)
+                                    try {
+                                        tag = getHelperFilterRepository().save(newTag).blockingGet()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                                
+                                // 3. Add ID
+                                tag?.uid?.let { clipTagIds.add(it) }
+                            }
+                        }
+                    }
+                    if (clipTagIds.isNotEmpty()) {
+                        clip.tagIds = clipTagIds
+                    } 
                     
                     restoredClips.add(clip)
                 }

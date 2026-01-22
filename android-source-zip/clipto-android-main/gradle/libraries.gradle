@@ -56,7 +56,7 @@ ext {
                     'androidx.test.uiautomator:uiautomator:2.2.0',
                     'androidx.arch.core:core-testing:2.0.0',
                     'androidx.test:runner:1.1.0',
-                    'org.mockito:mockito-android:2.22.0'
+                    'org.mockito:mockito-android:4.11.0'
             ],
 
             android_instrumentation_testing_utils   : [
@@ -100,19 +100,19 @@ ext {
 
             java_rxjava                       : [
                     "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
-                    'com.squareup.okhttp3:okhttp:4.9.2',
-                    'com.google.code.gson:gson:2.8.7'
+                    'com.squareup.okhttp3:okhttp:4.10.0',
+                    'com.google.code.gson:gson:2.10.1'
             ],
 
             java_rest                         : [
-                    'com.squareup.retrofit2:retrofit:2.4.0',
-                    'com.squareup.retrofit2:adapter-rxjava2:2.4.0',
-                    'com.squareup.retrofit2:converter-gson:2.4.0',
-                    'com.squareup.okhttp3:okhttp:4.9.2',
-                    'com.squareup.okhttp3:logging-interceptor:4.9.2',
-                    'com.squareup.okhttp3:okhttp-urlconnection:4.9.2',
+                    'com.squareup.retrofit2:retrofit:2.9.0',
+                    'com.squareup.retrofit2:adapter-rxjava2:2.9.0',
+                    'com.squareup.retrofit2:converter-gson:2.9.0',
+                    'com.squareup.okhttp3:okhttp:4.10.0',
+                    'com.squareup.okhttp3:logging-interceptor:4.10.0',
+                    'com.squareup.okhttp3:okhttp-urlconnection:4.10.0',
                     'org.greenrobot:essentials:3.1.0',
-                    'com.google.code.gson:gson:2.8.7'
+                    'com.google.code.gson:gson:2.10.1'
             ],
 
             java_kotlin                       : [
@@ -120,10 +120,10 @@ ext {
             ],
 
             java_unit_testing                 : [
-                    'junit:junit:4.12',
+                    'junit:junit:4.13.2',
                     'commons-io:commons-io:2.5',
                     'io.jsonwebtoken:jjwt:0.9.0',
-                    'org.mockito:mockito-core:2.22.0',
+                    'org.mockito:mockito-core:4.11.0',
                     'com.github.tomakehurst:wiremock:2.8.0',
                     "org.jetbrains.kotlin:kotlin-test-junit:${kotlinPluginVersion}"
             ]
