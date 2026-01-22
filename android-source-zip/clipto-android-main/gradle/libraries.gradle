@@ -4,7 +4,7 @@ ext {
 
     rxJavaVersion = '2.2.21'
     objectboxVersion = '2.9.0'
-    archWorkVersion = '2.5.0'
+    archWorkVersion = '2.7.1'
     archNavigationVersion = '2.3.5'
     lifecycleVersion = '2.3.1'
     markwonVersion = '4.6.2'
