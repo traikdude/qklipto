@@ -39,3 +39,14 @@ jobs:
         with:
           name: jules-report
           path: jules-report.md
+
+      - name: Create Issue from Report
+        if: success()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "🕵🏾‍♂️ Jules Analysis Report: ${{ github.sha }}"
+          content-filepath: jules-report.md
+          labels: |
+            jules-report
+            automated
+          token: ${{ secrets.GITHUB_TOKEN }}
