@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+      fix_mode:
+        description: 'Run in Fix Mode? (Applies changes to code)'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -17,6 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,12 +34,29 @@ jobs:
       - name: Install Jules
         run: npm install -g @google/jules
         
-      - name: Run Jules Analysis
+      - name: Run Jules Analysis (Check)
+        if: ${{ github.event.inputs.fix_mode != 'true' }}
         env:
           JULES_GITHUB_TOKEN: ${{ secrets.JULES_GITHUB_TOKEN }}
         run: |
-          # Ensure Jules is authenticated via Token
+          # Standard Read-Only Check
           jules check . --report-file jules-report.md
+
+      - name: Run Jules Analysis (Fix & Apply)
+        if: ${{ github.event.inputs.fix_mode == 'true' }}
+        env:
+          JULES_GITHUB_TOKEN: ${{ secrets.JULES_GITHUB_TOKEN }}
+        run: |
+          # Attempt to automatically fix issues
+          # Note: Assuming 'fix' or 'check --fix' is the command. Adjust if necessary.
+          jules fix . --report-file jules-report.md || true
+          
+      - name: Commit & Push Changes
+        if: ${{ github.event.inputs.fix_mode == 'true' }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🤖 Jules Auto-Fix: Applied automated code improvements"
+          branch: ${{ github.head_ref }}
           
       - name: Upload Report
         if: always()
