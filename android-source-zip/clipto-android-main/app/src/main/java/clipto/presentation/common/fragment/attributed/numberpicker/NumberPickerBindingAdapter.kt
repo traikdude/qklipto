@@ -9,6 +9,7 @@ import androidx.databinding.InverseBindingMethods
 class NumberPickerBindingAdapter {
     companion object {
         @BindingAdapter("progress")
+        @JvmStatic
         fun bindProgress(view: NumberPicker, value: Int) {
             view.progress = value
         }

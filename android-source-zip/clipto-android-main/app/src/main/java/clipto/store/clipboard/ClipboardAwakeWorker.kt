@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit
 
 @HiltWorker
 class ClipboardAwakeWorker @AssistedInject constructor(
-        val appState: AppState,
         @Assisted val context: Context,
-        @Assisted workerParams: WorkerParameters
+        @Assisted workerParams: WorkerParameters,
+        val appState: AppState
 ) : Worker(
         context,
         workerParams) {
