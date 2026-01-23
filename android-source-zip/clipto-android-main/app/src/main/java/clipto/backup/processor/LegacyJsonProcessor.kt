@@ -138,12 +138,19 @@ open class LegacyJsonProcessor @Inject constructor() : BackupProcessor() {
 
     private fun parseDate(dateStr: String?): Date? {
         if (dateStr.isNullOrEmpty()) return Date()
-        try {
-            // ISO 8601 parser
-            return java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).parse(dateStr)
-        } catch (e: Exception) {
-            return Date()
+        val formats = listOf(
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss.SSS",
+            "yyyy-MM-dd'T'HH:mm:ss"
+        )
+        for (pattern in formats) {
+            try {
+                return java.text.SimpleDateFormat(pattern, Locale.US).parse(dateStr)
+            } catch (_: Exception) {
+                // Try next format
+            }
         }
+        return Date()
     }
 }
-

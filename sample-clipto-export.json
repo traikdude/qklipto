@@ -5,6 +5,7 @@
   "clips": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440001",
+      "type": "0",
       "text": "Welcome to Clipto Pro! This is a sample clipboard entry.",
       "title": "Welcome Message",
       "createDate": "2026-01-21T10:30:00.000Z",
@@ -14,6 +15,7 @@
     },
     {
       "id": "550e8400-e29b-41d4-a716-446655440002",
+      "type": "0",
       "text": "https://github.com/clipto-pro/clipto-android",
       "title": "GitHub Repository",
       "createDate": "2026-01-21T11:00:00.000Z",
@@ -23,6 +25,7 @@
     },
     {
       "id": "550e8400-e29b-41d4-a716-446655440003",
+      "type": "0",
       "text": "Remember to:\n1. Test the legacy import feature\n2. Verify data migration\n3. Check tag handling",
       "title": "Migration Checklist",
       "createDate": "2026-01-21T12:00:00.000Z",
@@ -32,6 +35,7 @@
     },
     {
       "id": "550e8400-e29b-41d4-a716-446655440004",
+      "type": "0",
       "text": "The Android build is now successful! APK size: 49.4 MB",
       "title": "Build Success",
       "createDate": "2026-01-22T05:00:00.000Z",

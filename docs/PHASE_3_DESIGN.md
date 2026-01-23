@@ -32,6 +32,7 @@ Each `{firestoreId}.json` will contain:
 ```json
 {
   "id": "uuid-v4-or-original-firestore-id",
+  "type": "0",
   "text": "The clipboard content...",
   "modifyDate": 1678888888888,
   "deleted": false,

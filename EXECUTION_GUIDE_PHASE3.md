@@ -31,3 +31,15 @@ node Phase3.2_AutomatedExport.js
 
 ### Step 3: Check the Results
 Your data will be available in the `qklipto-sync` folder in the project root.
+
+Expected structure (matches `docs/PHASE_3_DESIGN.md`):
+```
+/qklipto-sync/
+├── meta.json
+├── clips/
+│   ├── {id}.json
+├── tags.json
+└── settings.json
+```
+
+If the exporter cannot locate the Clipto Dexie database, it will still emit a debug payload in `qklipto-sync/raw/` so you can inspect available IndexedDB stores.

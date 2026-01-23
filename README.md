@@ -150,11 +150,11 @@ QKlipto extracts the full Desktop source code from Clipto's Electron bundle usin
 ## 🗄️ Database Analysis
 
 ### Windows Desktop
-- **Technology:** TBD (SQLite/LevelDB/NeDB)
-- **Location:** `%APPDATA%\Clipto`
+- **Technology:** IndexedDB via Dexie.js (Electron/Chromium)
+- **Location:** `%APPDATA%\Clipto` (app data; IndexedDB lives in Chromium profile data)
 
 ### Android
-- **Technology:** SQLite
+- **Technology:** ObjectBox (NoSQL)
 - **Source:** [clipto-pro/Android](https://github.com/clipto-pro/Android) (v7.1.4)
 - **Latest APK:** v7.3.8 (minor Firebase changes only)
 
@@ -188,8 +188,8 @@ QKlipto extracts the full Desktop source code from Clipto's Electron bundle usin
 
 **Phase 0:** ✅ Complete  
 **Phase 1:** ✅ Complete  
-**Phase 2:** 🚧 In Progress (Source extraction ready)  
-**Phase 3:** ⏸️ Pending (Awaiting Phase 2 analysis)
+**Phase 2:** ✅ Complete (Source extracted + analyzed)  
+**Phase 3:** 🚧 In Progress (Export bridge + Android import hardening)
 
 See [PROGRESS.md](docs/PROGRESS.md) for detailed status.
 
