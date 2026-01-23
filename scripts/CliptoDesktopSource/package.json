@@ -1,1 +1,64 @@
-{"name":"clipto","version":"7.2.17","description":"Your personal writing companion","productName":"Clipto","author":"Clipto Team","email":"clipto.pro@gmail.com","homepage":"https://clipto.pro","private":true,"dependencies":{"aes-js":"3.1.2","autolinker":"3.14.3","camelcase":"5.3.1","core-js":"3.19.1","crypto-js":"3.1.9-1","date-and-time":"=2.0.1","dexie":"=3.2.0-rc.3","dompurify":"2.3.3","easy-auto-launch":"6.0.0","electron-context-menu":"3.1.1","electron-dl":"3.3.0","electron-root-path":"1.0.16","electron-store":"8.0.1","electron-updater":"4.3.8","events":"3.3.0","fast-sort":"2.2.0","file-saver":"2.0.5","firebase":"8.10.0","firebaseui":"5.0.0","github-markdown-css":"4.0.0","highlight-words-core":"1.2.2","hotkeys-js":"3.8.7","keycode":"2.2.1","linkify-it":"3.0.3","loglevel":"1.7.1","marked":"4.0.3","platform":"1.3.6","print-js":"1.6.0","qrcode":"1.4.4","quasar":"1.15.23","text-field-edit":"3.1.1","vue":"2.6.12","vue-async-computed":"3.9.0","vue-i18n":"8.26.7","vue-pinch-zoom":"1.0.1"},"engines":{"node":">= 15.13.0","npm":">= 5.6.0","yarn":">= 1.16.0"},"resolutions":{"ajv":"6.8.1"},"repository":{"type":"git","url":"https://github.com/clipto-pro/Desktop.git"},"main":"./debug-entry.js"}
+{
+    "name": "clipto",
+    "version": "7.2.18",
+    "description": "Your personal writing companion",
+    "productName": "Clipto",
+    "author": "Clipto Team",
+    "email": "clipto.pro@gmail.com",
+    "homepage": "https://clipto.pro",
+    "private": true,
+    "dependencies": {
+        "aes-js": "3.1.2",
+        "autolinker": "3.14.3",
+        "camelcase": "5.3.1",
+        "core-js": "3.19.1",
+        "crypto-js": "3.1.9-1",
+        "date-and-time": "=2.0.1",
+        "dexie": "=3.2.0-rc.3",
+        "dompurify": "2.3.3",
+        "easy-auto-launch": "6.0.0",
+        "electron-context-menu": "3.1.1",
+        "electron-dl": "3.3.0",
+        "electron-root-path": "1.0.16",
+        "electron-store": "8.0.1",
+        "electron-updater": "4.3.8",
+        "events": "3.3.0",
+        "fast-sort": "2.2.0",
+        "file-saver": "2.0.5",
+        "firebase": "8.10.0",
+        "firebaseui": "5.0.0",
+        "github-markdown-css": "4.0.0",
+        "highlight-words-core": "1.2.2",
+        "hotkeys-js": "3.8.7",
+        "keycode": "2.2.1",
+        "linkify-it": "3.0.3",
+        "loglevel": "1.7.1",
+        "marked": "4.0.3",
+        "platform": "1.3.6",
+        "print-js": "1.6.0",
+        "qrcode": "1.4.4",
+        "quasar": "1.15.23",
+        "text-field-edit": "3.1.1",
+        "vue": "2.6.12",
+        "vue-async-computed": "3.9.0",
+        "vue-i18n": "8.26.7",
+        "vue-pinch-zoom": "1.0.1"
+    },
+    "engines": {
+        "node": ">= 15.13.0",
+        "npm": ">= 5.6.0",
+        "yarn": ">= 1.16.0"
+    },
+    "resolutions": {
+        "ajv": "6.8.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/clipto-pro/Desktop.git"
+    },
+    "main": "./debug-entry.js"
+},
+"devDependencies": {
+    "electron-builder": "^26.4.0"
+}
+}

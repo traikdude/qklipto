@@ -130,6 +130,8 @@ test-data/
 # User Artifacts & Temp
 # ============================================
 backups/
+archives/
+data/
 recovery/
 tools/
 qklipto-sync/
@@ -137,3 +139,4 @@ ZEN-*.md
 *_session_transcript.md
 clipto-native-import.json
 test.ps1
+session transcripts/

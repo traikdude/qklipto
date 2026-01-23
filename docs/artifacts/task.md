@@ -1,0 +1,25 @@
+- [x] Dismiss Dependabot alerts (Completed in previous session)
+- [ ] Investigate why data is not visible in Windows Clipto app
+    - [ ] Analyze `sync-server/server.js` implementation
+    - [ ] Verify `db.json` content integrity
+    - [ ] Check if `sync-server` is running and accessible
+    - [/] Verify Windows App connection settings
+- [x] Feasibility Check: UI Modifications
+    - [x] Confirm if source code provides editable components (Vue/React) or only minified bundles (Confirmed: Minified)
+- [x] Implement Sync Server Launcher & Tray Menu
+    - [x] Create `LaunchCliptoWithSync.bat`
+    - [x] Modify `scripts/CliptoDesktopSource/electron-main.js` to add Tray items
+    - [x] Implement Import/Export logic in `electron-main.js` or helper script
+    - [ ] Verify functionality
+- [ ] Consolidate Clipto Directory Structure
+    - [x] Phase 1: Create full backup to OneDrive
+    - [x] Phase 2: Create subdirectories (backups/, archives/, build/, data/)
+    - [x] Phase 3: Move files from OneDrive to project
+    - [x] Phase 4: Update .gitignore
+    - [/] Phase 5: Locate or generate Clipto.exe (Build in progress)
+    - [x] Verification: Directory structure verified
+- [ ] Release Source Code v7.2.18
+    - [ ] Sync with remote
+    - [ ] Bump version in package.json
+    - [ ] Tag and Push
+
