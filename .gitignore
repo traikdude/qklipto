@@ -125,3 +125,15 @@ yarn-error.log*
 # ============================================
 test-data/
 *.test.db
+
+# ============================================
+# User Artifacts & Temp
+# ============================================
+backups/
+recovery/
+tools/
+qklipto-sync/
+ZEN-*.md
+*_session_transcript.md
+clipto-native-import.json
+test.ps1

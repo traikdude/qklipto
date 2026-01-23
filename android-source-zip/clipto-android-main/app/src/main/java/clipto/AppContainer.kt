@@ -160,9 +160,10 @@ class AppContainer : MvvmNavigationActivity<AppContainerViewModel>() {
     }
 
     private fun initNewVersionAvailable() {
-        if (viewModel.appConfig.isNewVersionAvailable()) {
-            NewVersionBannerFragment.show(this)
-        }
+        // Disabled for offline mode
+        // if (viewModel.appConfig.isNewVersionAvailable()) {
+        //     NewVersionBannerFragment.show(this)
+        // }
     }
 
     private fun initSelectPlanBanner() {
@@ -205,8 +206,8 @@ class AppContainer : MvvmNavigationActivity<AppContainerViewModel>() {
                                 appState.setLoadingState(DataLoadingState.Error(code = "sign_in_token", throwable = th))
                             }
                         }
-                    } else if (webAuth && IntentUtils.open(this, BuildConfig.appAuthLink)) {
-                        //
+                    } else if (webAuth /* && IntentUtils.open(this, BuildConfig.appAuthLink) */) {
+                        // Disabled Web Auth Redirect
                     } else {
                         auth.signIn(this) { authData, th ->
                             if (authData != null) {

@@ -56,7 +56,8 @@ class MainActionsViewModel @Inject constructor(
     private val sharedPrefsState: SharedPrefsState,
     private val mainActionUseCases: MainActionUseCases,
     private val fileScreenHelper: FileScreenHelper,
-    private val clipScreenHelper: ClipScreenHelper
+    private val clipScreenHelper: ClipScreenHelper,
+    private val localSyncManager: clipto.repository.LocalSyncManager
 ) : BlocksViewModel(app) {
 
     override fun doCreate() {
@@ -226,6 +227,28 @@ class MainActionsViewModel @Inject constructor(
                 onClick = this::onNewFilter
             )
         )
+        
+        // SYNC (New Section)
+        blocks.add(SeparatorVerticalBlock(marginHoriz = 0, marginVert = 12))
+        blocks.add(TitleBlock(R.string.button_sync, textColor = app.getTextColorSecondary()))
+        blocks.add(
+            MainActionBlock(
+                titleRes = R.string.button_sync,
+                description = "Push data to PC Server",
+                iconRes = R.drawable.ic_sync,
+                iconColor = app.getColorPositive(),
+                onClick = { onManualSync() }
+            )
+        )
+        blocks.add(
+            MainActionBlock(
+                titleRes = R.string.button_sync,
+                description = "Pull data from PC",
+                iconRes = R.drawable.ic_sync, // Reusing icon
+                iconColor = app.getTextColorAccent(),
+                onClick = { onManualPull() }
+            )
+        )
 
         // SPACING
         blocks.add(SeparatorVerticalBlock(marginHoriz = 0, marginVert = 12))
@@ -386,6 +409,18 @@ class MainActionsViewModel @Inject constructor(
                 withDismiss(fragment, callback)
             }
         }
+    }
+
+    private fun onManualSync() {
+        android.widget.Toast.makeText(app, "Pushing to PC...", android.widget.Toast.LENGTH_SHORT).show()
+        localSyncManager.executePush()
+        dismiss()
+    }
+
+    private fun onManualPull() {
+        android.widget.Toast.makeText(app, "Pulling from PC...", android.widget.Toast.LENGTH_SHORT).show()
+        localSyncManager.executePull()
+        dismiss()
     }
 
     private fun onSelectClips(folder: FileRef, callback: (clips: List<Clip>) -> Unit) {

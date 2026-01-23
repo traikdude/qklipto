@@ -1,16 +1,15 @@
 # 🎉 Release v1.0.1 - qklipto
 
 ## 📅 Release Information
-- Date: Thursday, January 22, 2026 at 07:35 PM EST
+- Date: Friday, January 23, 2026 at 01:15 PM EST
 - Tag: qklipto-v1.0.1
-- Commit: 15a683621dd5248051921aed72601b307654c149
-- Branch: master
+- Branch: main
 
 ## 📦 Included Files
 - app-debug-v1.0.1.apk
 
 ## 📋 Summary
-Final build verification after dependency updates and configuration improvements.
+Final build verification after dependency updates, configuration improvements, and repository cleanup.
 
 ## 🔄 Changes in This Release
 
