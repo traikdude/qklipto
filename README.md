@@ -5,6 +5,22 @@
 > *"RESURRECT CLIPTO"* - 🐦‍🔥  
 > **Challenge accepted.** ✅
 
+<div align="center">
+
+
+![GitHub stars](https://img.shields.io/github/stars/traikdude/qklipto?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-v1.0.1-orange?style=for-the-badge)
+![Jules CI](https://img.shields.io/github/actions/workflow/status/traikdude/qklipto/jules.yml?style=for-the-badge&label=Jules%20CI)
+
+![PowerShell](https://img.shields.io/badge/PowerShell-%235391FE.svg?style=for-the-badge&logo=powershell&logoColor=white)
+![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Android](https://img.shields.io/badge/Android-Target%2012-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+
+
+</div>
+
 ---
 
 ## 🎯 Project Goals
