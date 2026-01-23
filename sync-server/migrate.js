@@ -1,30 +1,40 @@
 const fs = require('fs');
 const path = require('path');
 
-const BACKUP_FILE = "C:\\Users\\Erik\\OneDrive\\Desktop\\DESKTOP SHORTCUTS\\Documents\\TYPES OF FILES\\clipto_backup_260122_111559.json";
+// Allow passing file path as argument, otherwise default to sample in repo
+const BACKUP_FILE = process.argv[2] || path.join(__dirname, '../sample-clipto-export.json');
 const DB_FILE = path.join(__dirname, 'db.json');
 
 try {
-    console.log("📖 Reading Backup...");
+    console.log(`📖 Reading Backup from: ${BACKUP_FILE}`);
+    if (!fs.existsSync(BACKUP_FILE)) {
+        throw new Error(`File not found: ${BACKUP_FILE}`);
+    }
     const raw = fs.readFileSync(BACKUP_FILE, 'utf8');
     const backup = JSON.parse(raw);
 
-    console.log(`✅ Loaded Backup: ${backup.notes.length} notes found.`);
+    // Support both 'notes' (Legacy) and 'clips' (Desktop Export)
+    const sourceClips = backup.clips || backup.notes || [];
+    console.log(`✅ Loaded Backup: ${sourceClips.length} items found.`);
 
-    // Transform to Sync Server Format
-    // Backup format: { notes: [ { created:..., text:..., ... } ] }
-    // Server format: { version: timestamp, clips: [ { id:..., text:..., ... } ] }
+    if (sourceClips.length === 0) {
+        console.warn("⚠️ No clips found in the backup file.");
+    }
 
     const newDb = {
         version: Date.now(),
-        clips: backup.notes.map(n => {
+        clips: sourceClips.map(n => {
             return {
-                id: n.uuid || n.id || `legacy_${Date.now()}_${Math.random()}`,
-                text: n.text,
-                title: n.title,
-                createDate: n.created,
-                modifyDate: n.modified || n.updated,
-                fav: n.isFavorite || false,
+                // Map fields checking both new and legacy formats
+                id: n.id || n.uuid || `legacy_${Date.now()}_${Math.random()}`,
+                text: n.text || "",
+                title: n.title || "",
+                // 'created' is legacy, 'createDate' is new
+                createDate: n.createDate || n.created || new Date().toISOString(),
+                // 'modified'/'updated' are legacy, 'modifyDate' is new
+                modifyDate: n.modifyDate || n.modified || n.updated || new Date().toISOString(),
+                // 'isFavorite' is legacy, 'fav' is new
+                fav: (n.fav !== undefined) ? n.fav : (n.isFavorite || false),
                 tags: n.tags || []
             };
         })
@@ -38,4 +48,5 @@ try {
 
 } catch (e) {
     console.error("❌ Error:", e.message);
+    process.exit(1);
 }
