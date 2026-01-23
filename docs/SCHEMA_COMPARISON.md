@@ -3,23 +3,24 @@
 **Desktop Source:** Dexie.js (IndexedDB)
 **Android Source:** ObjectBox (NoSQL)
 
-## 📊 Table Status
+## 📊 Entity Alignment (Conceptual Mapping)
 
-| Feature | Desktop (IndexedDB) | Android (ObjectBox) | Status |
-|---------|---------------------|---------------------|--------|
-| **ClipBox** | - | ClipBox | ⚠️ Android Only |
-| **clips** | clips | - | ⚠️ Desktop Only |
-| **FileRefBox** | - | FileRefBox | ⚠️ Android Only |
-| **fileRefs** | fileRefs | - | ⚠️ Desktop Only |
-| **FilterBox** | - | FilterBox | ⚠️ Android Only |
-| **filters** | filters | - | ⚠️ Desktop Only |
-| **LinkPreviewBox** | - | LinkPreviewBox | ⚠️ Android Only |
-| **publicLinks** | publicLinks | - | ⚠️ Desktop Only |
-| **settings** | settings | - | ⚠️ Desktop Only |
-| **SettingsBox** | - | SettingsBox | ⚠️ Android Only |
-| **tags** | tags | - | ⚠️ Desktop Only |
-| **UserBox** | - | UserBox | ⚠️ Android Only |
-| **users** | users | - | ⚠️ Desktop Only |
+| Desktop (IndexedDB / Dexie) | Android (ObjectBox) | Alignment | Notes |
+|-----------------------------|---------------------|-----------|-------|
+| `clips`                     | `ClipBox`           | ✅ Conceptual match | Same core entity, different storage + naming. Requires field mapping. |
+| `tags`                      | `FilterBox`         | ✅ Conceptual match | Tags are modeled as filters on Android. |
+| `filters`                   | `FilterBox`         | ✅ Conceptual match | Filter entity represents tags + saved filters. |
+| `users`                     | `UserBox`           | ✅ Conceptual match | User metadata represented differently but same intent. |
+| `settings`                  | `SettingsBox`       | ✅ Conceptual match | Preferences stored in separate ObjectBox entity. |
+| `fileRefs`                  | `FileRefBox`        | ✅ Conceptual match | Attachment metadata differs in structure. |
+| `publicLinks`               | (No direct box)     | ⚠️ Partial | Android may not expose public links or uses a different entity. |
+| (N/A)                       | `LinkPreviewBox`    | ⚠️ Android-only | Android-only entity; ignore during desktop export. |
+
+## 🔎 Field-Level Mapping Snapshot (Clips)
+- **Desktop:** `text`, `title`, `createDate`, `modifyDate`, `fav`, `tagIds`, `firestoreId` (Dexie indexes).  
+- **Android:** `ClipBox` supports core text/date/fav/tag associations via ObjectBox entities.  
+- **Implication:** Requires a transformation layer (LegacyJsonProcessor + export mapping) rather than 1:1 table sync.
+
 ## 📝 Analysis
-- **Core Compatibility:** 0 tables matched
-- **Sync Feasibility:** "**MEDIUM** (Partial alignment)
+- **Core Compatibility:** Conceptual alignment across core entities (clips/tags/users/settings/file refs) despite naming differences.
+- **Sync Feasibility:** **MEDIUM → HIGH** once export/import mapping is enforced via JSON payloads.

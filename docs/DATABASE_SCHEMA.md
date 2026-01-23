@@ -13,13 +13,14 @@
 
 ### Android Comparison
 - **Mobile Tech:** ObjectBox (NoSQL)
-- **Compatibility:** High (Mapped Fields)
+- **Compatibility:** Indicates conceptual overlap, not direct table parity
 - **Mapping:**
   - `clips` ↔ `ClipBox`
   - `users` ↔ `UserBox`
   - `filters` ↔ `FilterBox`
   - `settings` ↔ `SettingsBox`
   - `fileRefs` ↔ `FileRefBox`
+- **Note:** Entity names differ; export/import requires a transformation layer.
 
 
 ---
