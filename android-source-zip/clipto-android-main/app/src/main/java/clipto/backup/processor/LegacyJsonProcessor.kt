@@ -70,7 +70,18 @@ open class LegacyJsonProcessor @Inject constructor() : BackupProcessor() {
                     // Actually, let's just create new Clips.
                     
                     clip.text = item.optString("text", "")
-                    clip.title = item.optString("title", null)
+                    // Handle type field – legacy format uses "0" for TEXT
+                    val typeStr = item.optString("type", "TEXT")
+                    clip.type = if (typeStr == "0" || typeStr.equals("TEXT", ignoreCase = true)) {
+                        TextType.TEXT
+                    } else {
+                        // Fallback to default or attempt to map other types
+                        try {
+                            TextType.valueOf(typeStr.uppercase())
+                        } catch (e: IllegalArgumentException) {
+                            TextType.TEXT
+                        }
+                    }
                     
                     // Dates - JSON Date() is usually ISO string "2023-..."
                     // We need to parse it. Or our export used .toISOString()
