@@ -125,7 +125,7 @@ QKlipto extracts the full Desktop source code from Clipto's Electron bundle usin
 - ✅ Full app architecture
 
 **Why this matters:**
-- The Desktop source was **lost** by d0x360
+- The Desktop source was reported **MISSING**
 - GitHub releases contain NO source code
 - This gives us everything needed to build custom sync
 
