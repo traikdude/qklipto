@@ -72,14 +72,14 @@ open class LegacyJsonProcessor @Inject constructor() : BackupProcessor() {
                     clip.text = item.optString("text", "")
                     // Handle type field – legacy format uses "0" for TEXT
                     val typeStr = item.optString("type", "TEXT")
-                    clip.type = if (typeStr == "0" || typeStr.equals("TEXT", ignoreCase = true)) {
-                        TextType.TEXT
+                    clip.textType = if (typeStr == "0" || typeStr.equals("TEXT", ignoreCase = true)) {
+                        TextType.TEXT_PLAIN
                     } else {
                         // Fallback to default or attempt to map other types
                         try {
                             TextType.valueOf(typeStr.uppercase())
                         } catch (e: IllegalArgumentException) {
-                            TextType.TEXT
+                            TextType.TEXT_PLAIN
                         }
                     }
                     

@@ -111,6 +111,59 @@ const UI_PAYLOAD = `
         document.body.appendChild(btn);
     }
 
+    // IMPORT API (Called by Main Process)
+    window.importClips = function(clips) {
+        console.log("📥 Receiving " + clips.length + " clips from Main Process...");
+        
+        const request = indexedDB.open("clipto");
+        
+        request.onerror = (event) => {
+            console.error("❌ Database error: " + event.target.errorCode);
+            alert("Database Error: Could not open local database.");
+        };
+
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            
+            // Check if store exists
+            if (!db.objectStoreNames.contains("clips")) {
+                alert("❌ Error: 'clips' table not found in database. The app might need to initialize first.");
+                return;
+            }
+
+            const transaction = db.transaction(["clips"], "readwrite");
+            const objectStore = transaction.objectStore("clips");
+            
+            let successCount = 0;
+            let errorCount = 0;
+
+            transaction.oncomplete = () => {
+                console.log("✅ Import Transaction Complete.");
+                const msg = "Import Complete!\\n\\n✅ Success: " + successCount + "\\n❌ Skipped: " + errorCount + "\\n\\nPlease RESTART the app or press Ctrl+R to see changes.";
+                alert(msg);
+                // Optional: Try to force Vue refresh if possible, otherwise reload
+                location.reload(); 
+            };
+
+            transaction.onerror = (event) => {
+                console.error("❌ Transaction error:", event.target.error);
+                alert("Transaction Failed: " + event.target.error);
+            };
+
+            clips.forEach(clip => {
+                // Ensure dates are valid Date objects if required by Dexie/IDB
+                // But usually strings are fine if not using keypath indexing on them
+                // Let's keep them as they are from JSON (strings) unless we know schema enforces strict types
+                // Note: Dexie often handles string dates, but let's be safe.
+                // Actually, existing export code shows raw dump.
+                
+                const request = objectStore.put(clip); // put() updates if key exists, add() fails
+                request.onsuccess = () => { successCount++; };
+                request.onerror = () => { errorCount++; };
+            });
+        };
+    };
+
     if (document.readyState === "complete") {
         createExportButton();
     } else {

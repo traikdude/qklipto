@@ -121,12 +121,4 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.12.0'
 }
 
-// Task to convert MDB to JSON using the utility class
-task runMdbToJson(type: JavaExec) {
-    group = "utility"
-    description = "Convert android_data.mdb to JSON using MdbToJson utility"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = "clipto.util.MdbToJson"
-    args "recovery/android_data.mdb", "backups/android_data.json"
-}
-
+// MdbToJson task removed - incompatible with Android build system

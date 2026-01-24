@@ -24,7 +24,7 @@ timeout /t 2 /nobreak >nul
 :: 2. Launch Desktop App
 echo Starting Desktop App...
 cd /d "c:\Users\Erik\.gemini\antigravity\scratch\qklipto\scripts\CliptoDesktopSource"
-call npx electron .
+call npx --yes electron .
 
 echo.
 echo ===================================================
