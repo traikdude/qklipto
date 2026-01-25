@@ -57,13 +57,29 @@ class ClipboardService : LifecycleService() {
     }
 
     private fun registerService() {
-        runCatching {
+        try {
             if (serviceStarted.compareAndSet(false, true)) {
                 L.log(this, "registerService")
-                clipboardNotificationManager.notify(this)
-                clipboardStateManager.onTrack(true)
-                registerScreenReceiver()
+                try {
+                    clipboardNotificationManager.notify(this)
+                } catch (e: Throwable) {
+                    L.log(this, "CRITICAL: Failed to start foreground service", e)
+                    serviceStarted.set(false)
+                    stopSelf()
+                    return
+                }
+                
+                try {
+                    clipboardStateManager.onTrack(true)
+                    registerScreenReceiver()
+                } catch (e: Throwable) {
+                    L.log(this, "Error initializing logic components", e)
+                }
             }
+        } catch (e: Throwable) {
+            L.log(this, "registerService fatal error", e)
+            serviceStarted.set(false)
+            stopSelf()
         }
     }
 
@@ -106,15 +122,23 @@ class ClipboardService : LifecycleService() {
         registerService()
 
         clipboardState.notification.getLiveData().observe(this) {
-            clipboardNotificationManager.notify(this, it?.clip)
+            try {
+                clipboardNotificationManager.notify(this, it?.clip)
+            } catch (e: Throwable) {
+                L.log(this, "Failed to update notification", e)
+            }
         }
 
         var canTrackClipboardInitialValue = clipboardState.canTakeNoteFromClipboard.getValue()
         clipboardState.canTakeNoteFromClipboard.getLiveData().observe(this) {
-            if (it != canTrackClipboardInitialValue) {
-                val toastRes = if (it) R.string.notification_track_clipboard_resume else R.string.notification_track_clipboard_pause
-                canTrackClipboardInitialValue = it
-                appState.showToast(toastRes)
+            try {
+                if (it != canTrackClipboardInitialValue) {
+                    val toastRes = if (it) R.string.notification_track_clipboard_resume else R.string.notification_track_clipboard_pause
+                    canTrackClipboardInitialValue = it
+                    appState.showToast(toastRes)
+                }
+            } catch (e: Throwable) {
+                L.log(this, "Failed to handle clipboard track change", e)
             }
         }
     }

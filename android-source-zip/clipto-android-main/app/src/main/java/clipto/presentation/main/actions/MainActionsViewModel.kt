@@ -293,6 +293,18 @@ class MainActionsViewModel @Inject constructor(
                         .subscribeBy("saveMainListData")
                 }
             ))
+            blocks.add(SpaceBlock(16))
+            blocks.add(TextInputLayoutBlock(
+                text = data.serverAddress,
+                hint = "Server Address",
+                changedTextProvider = { data.serverAddress },
+                onTextChanged = { text ->
+                    val newData = data.copy(serverAddress = text?.toString() ?: "")
+                    sharedPrefsDao.saveMainListData(newData)
+                        .subscribeBy("saveMainListData")
+                    null
+                }
+            ))
             blocks.add(
                 WarningBlock(
                     actionIcon = 0,

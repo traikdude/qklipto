@@ -99,27 +99,44 @@ internal class ClipboardStateManagerAdbAdapter constructor(manager: ClipboardSta
 
     private fun getClipFromLogcat() = Observable.create<String> { emitter ->
         try {
+            // NUCLEAR OPTION: Guard Runtime.exec
             runCatching { Runtime.getRuntime().exec("logcat -c").waitFor() }
-            val process = Runtime.getRuntime().exec("logcat -s ClipboardService:E")
-            emitter.setCancellable { process.destroy() }
+            
+            // Use sh to avoid path issues and ensure execution environment
+            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "logcat -s ClipboardService:E"))
+            emitter.setCancellable { 
+                runCatching { process.destroy() }
+            }
+            
             val reader = process.inputStream.bufferedReader()
             val packageName = app.packageName
             while (!emitter.isDisposed) {
                 try {
+                    val line = reader.readLine()
+                    if (line == null) {
+                        break // End of stream
+                    }
                     L.log(this, "readClipFromLogcat :: read line")
-                    reader.readLine()
-                        ?.takeIf { it.contains(packageName) }
-                        ?.let { emitter.onNext(it) }
+                    if (line.contains(packageName)) {
+                        emitter.onNext(line)
+                    }
                 } catch (e: Exception) {
                     L.log(this, "readClipFromLogcat :: interrupted")
+                    if (!emitter.isDisposed) emitter.onError(e)
                 }
             }
         } catch (th: Throwable) {
-            emitter.onError(th)
+            if (!emitter.isDisposed) emitter.onError(th)
         }
     }
 
     private fun showAdvancedClipboardView(mode: AdvancedClipboardViewMode, clips: Collection<Clip>? = null) {
+        // NUCLEAR OPTION: Strict Permission Check
+        if (!app.canDrawOverlayViews()) {
+            L.log(this, "showAdvancedClipboardView :: Permission Denied")
+            return
+        }
+
         if (advancedClipboardActive.compareAndSet(false, true)) {
             advancedClipboardListener?.takeIf { !it.isDisposed }?.dispose()
             advancedClipboardListener = clipboardState.getViewScheduler().scheduleDirect(
@@ -135,6 +152,10 @@ internal class ClipboardStateManagerAdbAdapter constructor(manager: ClipboardSta
                 try {
                     onResetAdvancedClipboardView(skipStateReset = true)
                     advancedClipboardLastRun = System.currentTimeMillis()
+                    
+                    // NUCLEAR OPTION: Double Check Before Creation
+                    if (!app.canDrawOverlayViews()) return@onMain
+
                     val view = AdvancedClipboardView(app)
                     advancedClipboardView = view
                     val type =
@@ -144,7 +165,17 @@ internal class ClipboardStateManagerAdbAdapter constructor(manager: ClipboardSta
                             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                         }
                     val params = WindowManager.LayoutParams(type, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.TRANSLUCENT)
-                    windowManager.addView(view, params)
+                    
+                    // NUCLEAR OPTION: Pokemon Exception Handling (Gotta catch 'em all)
+                    try {
+                        windowManager.addView(view, params)
+                    } catch (e: Throwable) {
+                        L.log(this, "showAdvancedClipboardView :: Crashed adding view", e)
+                        Analytics.onError("error_add_overlay_view", e)
+                        // Verify cleanup
+                        onResetAdvancedClipboardView() 
+                    }
+                    
                 } catch (e: Exception) {
                     Analytics.onError("error_save_clip_from_logcat", e)
                     onResetAdvancedClipboardView()
@@ -156,13 +187,19 @@ internal class ClipboardStateManagerAdbAdapter constructor(manager: ClipboardSta
     private fun onResetAdvancedClipboardView(skipStateReset: Boolean = false) {
         try {
             advancedClipboardView?.let { view ->
+                // NUCLEAR OPTION: Guard Removal
                 try {
-                    windowManager.removeView(view)
-                    advancedClipboardView = null
-                } catch (e: Exception) {
-                    Analytics.onError("error_clear_copy_view", e)
+                    if (view.isAttachedToWindow || view.parent != null) {
+                        windowManager.removeView(view)
+                    }
+                } catch (e: Throwable) {
+                    // Ignore already removed or invalid token
+                    L.log(this, "onResetAdvancedClipboardView :: Removal warning", e)
                 }
+                advancedClipboardView = null
             }
+        } catch (e: Exception) {
+            Analytics.onError("error_clear_copy_view", e)
         } finally {
             if (!skipStateReset) {
                 advancedClipboardActive.set(false)

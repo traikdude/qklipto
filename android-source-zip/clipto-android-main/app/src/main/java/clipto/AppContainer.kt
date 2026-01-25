@@ -190,40 +190,50 @@ class AppContainer : MvvmNavigationActivity<AppContainerViewModel>() {
                 val onSignInCallback: () -> Unit = {
                     if (webAuthToken != null) {
                         auth.signIn(webAuthToken) { authData, th ->
-                            if (authData != null) {
-                                val user = User().apply {
-                                    email = authData.email
-                                    photoUrl = authData.photoUrl
-                                    firebaseId = authData.firebaseId
-                                    providerId = authData.providerId
-                                    displayName = authData.displayName
+                            try {
+                                if (authData != null) {
+                                    val user = User().apply {
+                                        email = authData.email
+                                        photoUrl = authData.photoUrl
+                                        firebaseId = authData.firebaseId
+                                        providerId = authData.providerId
+                                        displayName = authData.displayName
+                                    }
+                                    viewModel.onSignIn(user)
+                                    if (!viewModel.isLocked() && appConfig.suggestSetPassCodeOnSignIn()) {
+                                        navController.navigateSafe(R.id.action_set_passcode)
+                                    }
+                                } else {
+                                    appState.setLoadingState(DataLoadingState.Error(code = "sign_in_token", throwable = th))
                                 }
-                                viewModel.onSignIn(user)
-                                if (!viewModel.isLocked() && appConfig.suggestSetPassCodeOnSignIn()) {
-                                    navController.navigateSafe(R.id.action_set_passcode)
-                                }
-                            } else {
-                                appState.setLoadingState(DataLoadingState.Error(code = "sign_in_token", throwable = th))
+                            } catch (e: Exception) {
+                                Analytics.onError("error_handle_sign_in_token", e)
+                                appState.showToast(R.string.error_unexpected)
                             }
                         }
                     } else if (webAuth /* && IntentUtils.open(this, BuildConfig.appAuthLink) */) {
                         // Disabled Web Auth Redirect
                     } else {
                         auth.signIn(this) { authData, th ->
-                            if (authData != null) {
-                                val user = User().apply {
-                                    email = authData.email
-                                    photoUrl = authData.photoUrl
-                                    firebaseId = authData.firebaseId
-                                    providerId = authData.providerId
-                                    displayName = authData.displayName
+                            try {
+                                if (authData != null) {
+                                    val user = User().apply {
+                                        email = authData.email
+                                        photoUrl = authData.photoUrl
+                                        firebaseId = authData.firebaseId
+                                        providerId = authData.providerId
+                                        displayName = authData.displayName
+                                    }
+                                    viewModel.onSignIn(user)
+                                    if (!viewModel.isLocked() && appConfig.suggestSetPassCodeOnSignIn()) {
+                                        navController.navigateSafe(R.id.action_set_passcode)
+                                    }
+                                } else {
+                                    appState.setLoadingState(DataLoadingState.Error(code = "sign_in_web", throwable = th))
                                 }
-                                viewModel.onSignIn(user)
-                                if (!viewModel.isLocked() && appConfig.suggestSetPassCodeOnSignIn()) {
-                                    navController.navigateSafe(R.id.action_set_passcode)
-                                }
-                            } else {
-                                appState.setLoadingState(DataLoadingState.Error(code = "sign_in_web", throwable = th))
+                            } catch (e: Exception) {
+                                Analytics.onError("error_handle_sign_in_web", e)
+                                appState.showToast(R.string.error_unexpected)
                             }
                         }
                     }

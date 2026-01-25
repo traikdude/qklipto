@@ -157,8 +157,13 @@ class ClipboardStateManager @Inject constructor(
 
     private fun start(): Boolean {
         if (clipboardState.isClipboardActivated()) {
-            ContextCompat.startForegroundService(app, Intent(app, ClipboardService::class.java))
-            ClipboardAwakeWorker.schedule(app, appConfig.clipboardAwareInterval())
+            try {
+                ContextCompat.startForegroundService(app, Intent(app, ClipboardService::class.java))
+                ClipboardAwakeWorker.schedule(app, appConfig.clipboardAwareInterval())
+            } catch (e: Throwable) {
+                L.log(this, "Failed to start ClipboardService", e)
+                Analytics.onError("error_start_clipboard_service", e)
+            }
         }
         return !clipboardTracking.get()
     }
