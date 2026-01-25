@@ -7,7 +7,7 @@ buildscript {
         kotlinPluginVersion = '1.6.10'
         objectboxPluginVersion = '2.9.1'
         androidToolsPluginVersion = '7.0.4'
-        googleServicesPluginVersion = '4.3.10'
+        googleServicesPluginVersion = '4.4.4'
         googlePlayPublisherPluginVersion = '2.6.2'
     }
     repositories {
