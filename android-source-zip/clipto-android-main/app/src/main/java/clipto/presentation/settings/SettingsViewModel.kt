@@ -28,6 +28,8 @@ class SettingsViewModel @Inject constructor(
         val internetState: InternetState,
         val backupManager: BackupManager,
         val clipboardState: ClipboardState,
+        val sharedPrefsState: clipto.dao.sharedprefs.SharedPrefsState,
+        val sharedPrefsDao: clipto.dao.sharedprefs.SharedPrefsDao,
         private val saveFilterAction: SaveFilterAction,
         private val saveSettingsAction: SaveSettingsAction
 ) : RxViewModel(app) {
@@ -65,5 +67,15 @@ class SettingsViewModel @Inject constructor(
     fun onSaveFilter(filter: Filter, withReload: Boolean = false) = saveFilterAction.execute(filter, reload = withReload)
 
     fun onSaveSettings() = saveSettingsAction.execute()
+
+    fun getServerAddress(): String = sharedPrefsState.mainListData.getValue()?.serverAddress ?: ""
+
+    fun onSaveServerAddress(address: String) {
+        val current = sharedPrefsState.mainListData.getValue() ?: clipto.dao.sharedprefs.data.MainListData()
+        if (current.serverAddress != address) {
+            sharedPrefsDao.saveMainListData(current.copy(serverAddress = address))
+                .subscribeBy("onSaveServerAddress")
+        }
+    }
 
 }

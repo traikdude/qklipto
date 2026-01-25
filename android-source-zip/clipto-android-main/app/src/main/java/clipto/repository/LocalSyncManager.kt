@@ -19,8 +19,8 @@ class LocalSyncManager @Inject constructor(
     private val sharedPrefsState: clipto.dao.sharedprefs.SharedPrefsState
 ) {
 
-    // Hardcoded IP as per user request
-    private val BASE_URL = "http://10.0.0.59:3000/"
+    // Base URL is overridden by @Url params, but Retrofit needs a valid base.
+    private val DUMMY_BASE_URL = "http://localhost/"
 
     private val api: SyncApi
 
@@ -33,7 +33,7 @@ class LocalSyncManager @Inject constructor(
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(DUMMY_BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(clipto.common.misc.GsonUtils.get()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -42,16 +42,24 @@ class LocalSyncManager @Inject constructor(
         api = retrofit.create(SyncApi::class.java)
     }
 
+    private fun getSyncUrl(): String {
+        val saved = sharedPrefsState.mainListData.getValue()?.serverAddress
+        // Default to the user's requested hardcoded IP if nothing is saved
+        val base = if (saved.isNullOrBlank()) "http://10.0.0.59:3000/" else saved
+        return if (base.endsWith("/")) "${base}sync" else "$base/sync"
+    }
+
     fun executePush() {
         // 1. Get all clips from local DB
         val allClips = clipBoxDao.getAllClips()
         // ClipBox implements Clip, so we can pass it directly or cast if needed
         val domainClips: List<Clip> = allClips
 
-        println("SYNC: Found ${domainClips.size} clips to push to $BASE_URL")
+        val url = getSyncUrl()
+        println("SYNC: Found ${domainClips.size} clips to push to $url")
 
         // 2. Push to Server
-        api.push(SyncApi.PushRequest(domainClips))
+        api.push(url, SyncApi.PushRequest(domainClips))
             .subscribeOn(Schedulers.io())
             .subscribe({ response ->
                 println("SYNC: Push Success! Server Version: ${response.version}")
@@ -62,10 +70,11 @@ class LocalSyncManager @Inject constructor(
     }
 
     fun executePull() {
-        println("SYNC: Pulling from $BASE_URL")
+        val url = getSyncUrl()
+        println("SYNC: Pulling from $url")
 
         // 1. Ask Server for data (version 0 to get everything)
-        api.pull(0)
+        api.pull(url, 0)
             .subscribeOn(Schedulers.io())
             .subscribe({ response ->
                 println("SYNC: Pull Response: ${response.status}")

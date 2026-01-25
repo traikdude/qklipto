@@ -114,6 +114,19 @@ class SettingsFragment : MvvmFragment<SettingsViewModel>() {
 
         val list = mutableListOf<BlockItem<SettingsFragment>>()
 
+        // CONNECTIVITY
+        list.add(HeaderBlock(R.string.settings_group_connectivity))
+        list.add(TextInputLayoutBlock(
+            text = viewModel.getServerAddress(),
+            hint = "Server Address",
+            changedTextProvider = { viewModel.getServerAddress() },
+            onTextChanged = { text ->
+                viewModel.onSaveServerAddress(text?.toString() ?: "")
+                null
+            }
+        ))
+        list.add(SeparatorVerticalBlock(marginHoriz = 0))
+
         // ACCOUNT
         list.add(AccountBlock(viewModel.userState, onSignIn = { webAuth, withWarning, callback -> viewModel.onSignIn(webAuth, withWarning, callback) }))
         list.add(SeparatorVerticalBlock(marginHoriz = 0))

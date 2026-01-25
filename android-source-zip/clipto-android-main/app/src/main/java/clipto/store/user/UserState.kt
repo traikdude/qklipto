@@ -81,7 +81,13 @@ class UserState @Inject constructor(
                     }
 
                     // sync limit
-                    val syncLimitString = app.getString(R.string.account_sync_plan_title, getSyncLimit())
+                    // sync limit
+                    val limit = getSyncLimit()
+                    val syncLimitString = if (limit == Integer.MAX_VALUE) {
+                         "Unlimited"
+                    } else {
+                        app.getString(R.string.account_sync_plan_title, limit)
+                    }
                     syncLimit.setValue(syncLimitString)
 
                     // authorization state
@@ -108,7 +114,7 @@ class UserState @Inject constructor(
 
     fun canSyncNote(clip: Clip): Boolean = canSyncNotes() && (!clip.tracked || appState.getSettings().universalClipboard || clip.forceSync)
     fun getAllNotesCount(): Long = appState.getFilterByAll().notesCount + appState.getFilterByDeleted().notesCount
-    fun getSyncLimit(): Int = user.requireValue().syncLimit + getSyncFreeLimit() + getSyncBonusForPublicKits()
+    fun getSyncLimit(): Int = Integer.MAX_VALUE
     fun isNotSynced(clip: Clip?): Boolean = isAuthorized() && !clip.isNew() && clip?.firestoreId == null
     fun canSyncNewNotes(): Boolean = user.requireValue().canSyncNewNotes()
     fun canSyncNotes(): Boolean = isSyncEnabled() && canSyncNewNotes()

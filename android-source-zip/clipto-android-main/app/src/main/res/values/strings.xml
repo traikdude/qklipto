@@ -578,6 +578,7 @@
     <string name="settings.group.clipboard">Clipboard</string>
     <string name="settings.group.behavior">Behavior</string>
     <string name="settings.group.appearance">Appearance</string>
+    <string name="settings.group.connectivity">Connectivity</string>
     <string name="settings.group.backup">Backup &amp; Restore</string>
     <string name="settings.group.security">Privacy &amp; Security</string>
 

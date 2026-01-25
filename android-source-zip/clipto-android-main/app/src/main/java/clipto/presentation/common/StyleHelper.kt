@@ -92,7 +92,7 @@ object StyleHelper {
             .append(name)
             .append(" (", context.getTextColorSecondarySpan())
             .let { builder ->
-                if (limit != null && limit > 0) {
+                if (limit != null && limit > 0 && limit != Integer.MAX_VALUE) {
                     if (count >= limit) {
                         val highlightColor = ThemeUtils.getColor(context, R.attr.swipeActionDelete)
                         builder

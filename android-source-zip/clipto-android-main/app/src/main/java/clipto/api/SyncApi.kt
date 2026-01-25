@@ -19,9 +19,9 @@ interface SyncApi {
         val clips: List<Clip>
     )
 
-    @GET("/sync")
-    fun pull(@Query("version") clientVersion: Long): Single<SyncResponse>
+    @GET
+    fun pull(@retrofit2.http.Url url: String, @Query("version") clientVersion: Long): Single<SyncResponse>
 
-    @POST("/sync")
-    fun push(@Body request: PushRequest): Single<SyncResponse>
+    @POST
+    fun push(@retrofit2.http.Url url: String, @Body request: PushRequest): Single<SyncResponse>
 }

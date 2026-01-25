@@ -20,6 +20,7 @@ import clipto.presentation.blocks.OutlinedButtonBlock
 import clipto.presentation.blocks.TextButtonBlock
 import clipto.presentation.blocks.ux.SeparatorVerticalBlock
 import clipto.presentation.blocks.ux.SpaceBlock
+import clipto.presentation.blocks.LabelBlock
 import clipto.presentation.common.dialog.DialogState
 import clipto.presentation.common.recyclerview.BlockItem
 import clipto.presentation.main.nav.blocks.FilterBlock
@@ -298,8 +299,16 @@ class MainNavViewModel @Inject constructor(
                     }
                 }
 
+                blocks.add(SpaceBlock(16))
+                blocks.add(
+                    LabelBlock(
+                        titleRes = R.string.settings_toolbar_title,
+                        iconRes = R.drawable.ic_settings,
+                        clickListener = { appState.requestNavigateTo(R.id.action_settings) }
+                    )
+                )
+
                 if (appConfig.getAppGuideId().isNotBlank()) {
-                    blocks.add(SpaceBlock.xxs())
                     blocks.add(appGuideBlock)
                 }
 

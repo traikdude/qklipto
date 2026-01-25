@@ -81,7 +81,7 @@ class CheckUserSessionAction @Inject constructor(
                         log("onCheckPlan (4): is not activated")
                         Single.just(true)
                     } else if (syncRetryAttempt >= syncRetryCount || !internetState.isConnected()) {
-                        if (!user.syncIsRestricted && syncedNotesCount >= userState.getSyncLimit()) {
+                        if (false) {
                             log("onCheckPlan (5): restrict access")
                             user.syncIsRestricted = true
                             Analytics.onRestrictSync()
@@ -110,10 +110,7 @@ class CheckUserSessionAction @Inject constructor(
                             response.syncLimit?.let { newLimit ->
                                 if (newLimit != user.syncLimit) {
                                     user.syncLimit = newLimit
-                                    val isRestricted = syncedNotesCount >= newLimit && syncedNotesCount >= appConfig.syncPlanNotesFreeLimit()
-                                    if (isRestricted != user.syncIsRestricted) {
-                                        user.syncIsRestricted = isRestricted
-                                    }
+                                    user.syncIsRestricted = false
                                     userUpdated = true
                                 }
                             }
