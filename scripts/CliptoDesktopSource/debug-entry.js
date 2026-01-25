@@ -111,6 +111,63 @@ const UI_PAYLOAD = `
         document.body.appendChild(btn);
     }
 
+    function createSyncButton() {
+        if (document.getElementById('clipto-sync-btn')) return;
+
+        const btn = document.createElement("button");
+        btn.id = 'clipto-sync-btn';
+        btn.innerHTML = "🔄 SYNC WITH PHONE";
+        
+        // Style: Clean Blue Button
+        Object.assign(btn.style, {
+            position: "fixed",
+            bottom: "20px",
+            right: "180px", // Left of Export button
+            zIndex: "999999",
+            padding: "12px 24px",
+            backgroundColor: "#3498db",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            fontWeight: "600",
+            fontSize: "14px",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
+            cursor: "pointer",
+            fontFamily: "sans-serif"
+        });
+
+        btn.onclick = async () => {
+            btn.innerHTML = "⏳ CONNECTING...";
+            btn.style.backgroundColor = "#f1c40f"; 
+            
+            try {
+                // 1. Fetch from Local Server
+                const response = await fetch('http://localhost:3000/sync?version=0');
+                if (!response.ok) throw new Error("Server not reachable");
+                
+                const json = await response.json();
+                const clips = json.data || json.clips || [];
+
+                btn.innerHTML = "⬇️ IMPORTING " + clips.length + "...";
+                
+                // 2. Use existing Native Import
+                if (window.importClips) {
+                    window.importClips(clips);
+                } else {
+                    alert("Import Agent not ready.");
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Sync Error: " + err.message + "\\n\\nMake sure 'LaunchCliptoWithSync.bat' is running!");
+                btn.innerHTML = "❌ SYNC FAILED";
+                btn.style.backgroundColor = "#e74c3c";
+            }
+        };
+
+        document.body.appendChild(btn);
+    }
+
     // IMPORT API (Called by Main Process)
     window.importClips = function(clips) {
         console.log("📥 Receiving " + clips.length + " clips from Main Process...");
@@ -166,10 +223,17 @@ const UI_PAYLOAD = `
 
     if (document.readyState === "complete") {
         createExportButton();
+        createSyncButton();
     } else {
-        window.addEventListener("load", createExportButton);
+        window.addEventListener("load", () => {
+            createExportButton();
+            createSyncButton();
+        });
     }
-    setTimeout(createExportButton, 2000);
+    setTimeout(() => {
+        createExportButton();
+        createSyncButton();
+    }, 2000);
 })();
 `;
 
