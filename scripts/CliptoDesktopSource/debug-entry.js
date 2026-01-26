@@ -1,247 +1,180 @@
-const { app } = require('electron');
+const electron = require('electron');
+const { app, BrowserWindow, ipcMain } = electron; // Added ipcMain
+const fs = require('fs');
+const path = require('path');
 
-// ============================================
-// CLIPTO EXPORT AGENT (NATIVE IDB MODE)
-// ============================================
+// ============================================================================
+// LOGGING
+// ============================================================================
+const logFile = path.join(__dirname, 'injection.log');
+function log(msg) {
+    try {
+        fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${msg}\n`);
+    } catch (e) { console.error(e); }
+}
 
+log("=== STARTING AGENT ENTRY (Final Polish) ===");
+
+// 1. Setup Reload Handler (Bypasses will-navigate)
+ipcMain.on('trigger-reload', (event) => {
+    log("IPC: Triggering Reload");
+    event.sender.reload();
+});
+
+// ============================================================================
+// PAYLOAD
+// ============================================================================
 const UI_PAYLOAD = `
 (function() {
-    console.log(" Export Agent Loaded (Native Mode)");
+    try {
+        console.log("🚀 QKLIPTO AGENT RUNNING");
 
-    function createExportButton() {
-        if (document.getElementById('clipto-export-btn')) return;
+        function createToolbar() {
+            if (document.getElementById('qklipto-toolbar')) return;
 
-        const btn = document.createElement("button");
-        btn.id = 'clipto-export-btn';
-        btn.innerHTML = "📥 EXPORT DATA";
-        
-        // Style: Clean Green Button
-        Object.assign(btn.style, {
-            position: "fixed",
-            bottom: "20px",
-            right: "20px",
-            zIndex: "999999",
-            padding: "12px 24px",
-            backgroundColor: "#2ecc71",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            fontWeight: "600",
-            fontSize: "14px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
-            cursor: "pointer",
-            fontFamily: "sans-serif"
-        });
-
-        btn.onclick = async () => {
-            btn.innerHTML = "⏳ SCANNING IDB...";
-            btn.style.backgroundColor = "#f1c40f"; 
+            const toolbar = document.createElement('div');
+            toolbar.id = 'qklipto-toolbar';
+            // POLISHED DARK UI
+            Object.assign(toolbar.style, {
+                position: 'fixed', bottom: '20px', right: '20px', zIndex: '2147483647',
+                display: 'flex', gap: '12px', padding: '12px 16px',
+                backgroundColor: '#202124', 
+                border: '1px solid #5f6368', 
+                borderRadius: '8px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.6)', 
+                fontFamily: 'Inter, Segoe UI, sans-serif',
+                alignItems: 'center'
+            });
             
-            try {
-                // 1. OPEN NATIVE DB
-                // Dexie databases are just IndexedDB databases
+            // Label
+            const label = document.createElement('span');
+            label.innerText = 'QKlip Server:';
+            Object.assign(label.style, {
+                color: '#9aa0a6',
+                fontSize: '12px',
+                fontWeight: '500',
+                marginRight: '4px'
+            });
+            toolbar.appendChild(label);
+
+            // SYNC BTN
+            const btnSync = document.createElement('button');
+            btnSync.innerHTML = '📥 Restore / Sync';
+            Object.assign(btnSync.style, {
+                padding: '8px 16px', backgroundColor: '#8ab4f8', color: '#202124',
+                border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
+                fontSize: '13px', transition: 'background 0.2s'
+            });
+            btnSync.onmouseover = () => btnSync.style.backgroundColor = '#aecbfa';
+            btnSync.onmouseout = () => btnSync.style.backgroundColor = '#8ab4f8';
+            
+            btnSync.onclick = async () => {
+                btnSync.innerHTML = "⏳ Connecting...";
+                try {
+                    const response = await fetch('http://localhost:3000/sync?version=0');
+                    const json = await response.json();
+                    const clips = json.data || json.clips || [];
+                    
+                     btnSync.innerHTML = "⬇️ Importing " + clips.length + "...";
+
+                    const request = indexedDB.open("clipto");
+                    request.onsuccess = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains("clips")) {
+                             alert("Error: 'clips' database not found. Please create a note manually first!"); return; 
+                        }
+                        const tx = db.transaction(["clips"], "readwrite");
+                        const store = tx.objectStore("clips");
+                        let count = 0;
+                        clips.forEach(c => { store.put(c); count++; });
+                        tx.oncomplete = () => {
+                            // Use IPC Reload to avoid 'will-navigate' lock
+                            const { ipcRenderer } = require('electron');
+                            ipcRenderer.send('trigger-reload');
+                        };
+                    };
+                } catch (e) {
+                    alert("Sync Failed: " + e.message + "\\nCheck if server is running!");
+                    btnSync.innerHTML = "❌ Fail";
+                }
+            };
+
+            // EXPORT BTN
+            const btnExport = document.createElement('button');
+            btnExport.innerHTML = '📤 Backup Data';
+            Object.assign(btnExport.style, {
+                padding: '8px 16px', backgroundColor: 'transparent', color: '#8ab4f8',
+                border: '1px solid #5f6368', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
+                fontSize: '13px'
+            });
+            btnExport.onmouseover = () => btnExport.style.backgroundColor = 'rgba(138, 180, 248, 0.1)';
+            btnExport.onmouseout = () => btnExport.style.backgroundColor = 'transparent';
+
+            btnExport.onclick = async () => {
                 const dbName = "clipto";
                 const req = indexedDB.open(dbName);
-
-                req.onerror = () => {
-                    alert("❌ Could not open IndexedDB 'clipto'");
-                    btn.innerHTML = "❌ IO ERROR";
-                };
-
                 req.onsuccess = (event) => {
                     const db = event.target.result;
                     const tables = ["clips", "tags", "users", "settings", "fileRefs"];
-                    const exportData = {
-                        version: "1.0-native",
-                        timestamp: new Date().toISOString(),
-                        source: "clipto-native-export"
-                    };
-
-                    let tablesProcessed = 0;
-
-                    // Helper to get all data from a store
-                    const getAll = (storeName) => {
-                        return new Promise((resolve) => {
-                            if (!db.objectStoreNames.contains(storeName)) {
-                                resolve([]);
-                                return;
-                            }
-                            const transaction = db.transaction(storeName, "readonly");
-                            const store = transaction.objectStore(storeName);
-                            const request = store.getAll();
-                            request.onsuccess = () => resolve(request.result);
-                            request.onerror = () => resolve([]);
-                        });
-                    };
-
-                    // Process all tables
-                    Promise.all(tables.map(async (table) => {
-                        exportData[table] = await getAll(table);
-                    })).then(() => {
-                        const count = exportData.clips ? exportData.clips.length : 0;
-                        console.log(\`✅ Extracted \${count} items\`);
-
-                        // DOWNLOAD
+                    const exportData = { version: "1.0-native", timestamp: new Date().toISOString() };
+                    
+                    const getAll = (s) => new Promise((resolve) => {
+                         if (!db.objectStoreNames.contains(s)) return resolve([]);
+                         const t = db.transaction(s, "readonly").objectStore(s).getAll();
+                         t.onsuccess = () => resolve(t.result);
+                         t.onerror = () => resolve([]);
+                    });
+                     Promise.all(tables.map(async t => exportData[t] = await getAll(t))).then(() => {
                         const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: "application/json"});
                         const a = document.createElement("a");
                         a.href = URL.createObjectURL(blob);
-                        a.download = "clipto-native-export.json";
+                        a.download = "clipto-backup.json";
                         document.body.appendChild(a);
                         a.click();
                         document.body.removeChild(a);
-
-                        btn.innerHTML = \`✅ DONE (\${count})\`;
-                        btn.style.backgroundColor = "#27ae60";
-                        setTimeout(() => btn.innerHTML = "📥 EXPORT DATA", 3000);
-                        
-                        db.close();
-                    }).catch(err => {
-                         alert("Read Error: " + err.message);
-                         btn.innerHTML = "❌ READ ERR";
                     });
                 };
-
-            } catch (err) {
-                console.error(err);
-                alert("Critical Error: " + err.message);
-                btn.innerHTML = "❌ CRITICAL";
-            }
-        };
-
-        document.body.appendChild(btn);
-    }
-
-    function createSyncButton() {
-        if (document.getElementById('clipto-sync-btn')) return;
-
-        const btn = document.createElement("button");
-        btn.id = 'clipto-sync-btn';
-        btn.innerHTML = "🔄 SYNC WITH PHONE";
-        
-        // Style: Clean Blue Button
-        Object.assign(btn.style, {
-            position: "fixed",
-            bottom: "20px",
-            right: "180px", // Left of Export button
-            zIndex: "999999",
-            padding: "12px 24px",
-            backgroundColor: "#3498db",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            fontWeight: "600",
-            fontSize: "14px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
-            cursor: "pointer",
-            fontFamily: "sans-serif"
-        });
-
-        btn.onclick = async () => {
-            btn.innerHTML = "⏳ CONNECTING...";
-            btn.style.backgroundColor = "#f1c40f"; 
-            
-            try {
-                // 1. Fetch from Local Server
-                const response = await fetch('http://localhost:3000/sync?version=0');
-                if (!response.ok) throw new Error("Server not reachable");
-                
-                const json = await response.json();
-                const clips = json.data || json.clips || [];
-
-                btn.innerHTML = "⬇️ IMPORTING " + clips.length + "...";
-                
-                // 2. Use existing Native Import
-                if (window.importClips) {
-                    window.importClips(clips);
-                } else {
-                    alert("Import Agent not ready.");
-                }
-
-            } catch (err) {
-                console.error(err);
-                alert("Sync Error: " + err.message + "\\n\\nMake sure 'LaunchCliptoWithSync.bat' is running!");
-                btn.innerHTML = "❌ SYNC FAILED";
-                btn.style.backgroundColor = "#e74c3c";
-            }
-        };
-
-        document.body.appendChild(btn);
-    }
-
-    // IMPORT API (Called by Main Process)
-    window.importClips = function(clips) {
-        console.log("📥 Receiving " + clips.length + " clips from Main Process...");
-        
-        const request = indexedDB.open("clipto");
-        
-        request.onerror = (event) => {
-            console.error("❌ Database error: " + event.target.errorCode);
-            alert("Database Error: Could not open local database.");
-        };
-
-        request.onsuccess = (event) => {
-            const db = event.target.result;
-            
-            // Check if store exists
-            if (!db.objectStoreNames.contains("clips")) {
-                alert("❌ Error: 'clips' table not found in database. The app might need to initialize first.");
-                return;
-            }
-
-            const transaction = db.transaction(["clips"], "readwrite");
-            const objectStore = transaction.objectStore("clips");
-            
-            let successCount = 0;
-            let errorCount = 0;
-
-            transaction.oncomplete = () => {
-                console.log("✅ Import Transaction Complete.");
-                const msg = "Import Complete!\\n\\n✅ Success: " + successCount + "\\n❌ Skipped: " + errorCount + "\\n\\nPlease RESTART the app or press Ctrl+R to see changes.";
-                alert(msg);
-                // Optional: Try to force Vue refresh if possible, otherwise reload
-                location.reload(); 
             };
 
-            transaction.onerror = (event) => {
-                console.error("❌ Transaction error:", event.target.error);
-                alert("Transaction Failed: " + event.target.error);
-            };
+            toolbar.appendChild(btnSync);
+            toolbar.appendChild(btnExport);
+            document.body.appendChild(toolbar);
+        }
 
-            clips.forEach(clip => {
-                // Ensure dates are valid Date objects if required by Dexie/IDB
-                // But usually strings are fine if not using keypath indexing on them
-                // Let's keep them as they are from JSON (strings) unless we know schema enforces strict types
-                // Note: Dexie often handles string dates, but let's be safe.
-                // Actually, existing export code shows raw dump.
-                
-                const request = objectStore.put(clip); // put() updates if key exists, add() fails
-                request.onsuccess = () => { successCount++; };
-                request.onerror = () => { errorCount++; };
-            });
-        };
-    };
+        if (document.readyState === "complete") createToolbar();
+        else window.addEventListener("load", createToolbar);
+        setInterval(createToolbar, 2000);
 
-    if (document.readyState === "complete") {
-        createExportButton();
-        createSyncButton();
-    } else {
-        window.addEventListener("load", () => {
-            createExportButton();
-            createSyncButton();
-        });
+    } catch (err) {
+        console.error("Injection Error", err);
     }
-    setTimeout(() => {
-        createExportButton();
-        createSyncButton();
-    }, 2000);
 })();
 `;
 
-// Inject into all windows
-app.on('web-contents-created', (event, contents) => {
-    contents.on('did-finish-load', () => {
-        contents.executeJavaScript(UI_PAYLOAD).catch(e => console.log("Injection Error:", e));
-    });
+function inject(win) {
+    if (!win || win.webContents.isDestroyed()) return;
+    log(`Injecting into window: ${win.getTitle()}`);
+
+    win.webContents.executeJavaScript(UI_PAYLOAD)
+        .then(() => log("Injection Success"))
+        .catch(e => log("Injection Error: " + e.message));
+}
+
+// 1. Hook Creation
+app.on('browser-window-created', (event, win) => {
+    log("Event: browser-window-created");
+    win.webContents.on('did-finish-load', () => inject(win));
+    win.webContents.on('dom-ready', () => inject(win)); // Try earlier too
 });
 
+// 2. Poll for existing (Backup)
+setTimeout(() => {
+    log("Polling for windows...");
+    const windows = BrowserWindow.getAllWindows();
+    log(`Found ${windows.length} existing windows`);
+    windows.forEach(w => inject(w));
+}, 3000);
+
+log("Requiring electron-main.js...");
 require('./electron-main.js');
+
