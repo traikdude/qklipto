@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../../db/database';
-import { createTag, TAG_COLORS } from '../../models/Tag';
-import { Plus, X, Tag as TagIcon } from 'lucide-react';
+import { createTag } from '../../models/Tag';
+import { Plus, Tag as TagIcon, Trash2 } from 'lucide-react';
 
 export const TagList = () => {
     const tags = useLiveQuery(() => db.tags.toArray());
@@ -12,7 +12,6 @@ export const TagList = () => {
     const handleCreateTag = async () => {
         if (!newTagName.trim()) return;
         try {
-            // Check duplicate
             const existing = await db.tags.where('name').equals(newTagName).first();
             if (existing) {
                 alert('Tag already exists!');
@@ -34,19 +33,19 @@ export const TagList = () => {
         }
     };
 
-    if (!tags) return <div className="p-8 text-center text-gray-500">Loading tags...</div>;
+    if (!tags) return <div className="p-8 text-center text-clipto-textSecondary">Loading tags...</div>;
 
     return (
         <div className="p-8 max-w-4xl mx-auto h-full flex flex-col">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-clipto-text flex items-center gap-2">
                     <TagIcon /> Tags
                 </h1>
 
                 {!isCreating && (
                     <button
                         onClick={() => setIsCreating(true)}
-                        className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium"
+                        className="bg-clipto-primary hover:bg-clipto-primaryDark text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium"
                     >
                         <Plus size={20} /> New Tag
                     </button>
@@ -54,31 +53,31 @@ export const TagList = () => {
             </div>
 
             {isCreating && (
-                <div className="mb-8 bg-gray-900 border border-gray-800 p-4 rounded-xl flex gap-3 animate-fadeIn">
+                <div className="mb-8 bg-clipto-surface border border-clipto-divider p-4 rounded-xl flex gap-3 animate-in fade-in">
                     <input
                         autoFocus
                         type="text"
                         placeholder="Tag name..."
                         value={newTagName}
                         onChange={(e) => setNewTagName(e.target.value)}
-                        className="flex-1 bg-gray-800 border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+                        className="flex-1 bg-clipto-surfaceLight border-clipto-divider rounded-lg px-4 py-2 text-clipto-text focus:outline-none focus:border-clipto-primary"
                         onKeyDown={(e) => e.key === 'Enter' && handleCreateTag()}
                     />
-                    <button onClick={handleCreateTag} className="px-4 py-2 bg-emerald-600 rounded-lg text-white">Add</button>
-                    <button onClick={() => setIsCreating(false)} className="px-4 py-2 bg-gray-800 rounded-lg text-gray-400">Cancel</button>
+                    <button onClick={handleCreateTag} className="px-4 py-2 bg-clipto-primary rounded-lg text-white">Add</button>
+                    <button onClick={() => setIsCreating(false)} className="px-4 py-2 bg-clipto-surfaceLight rounded-lg text-clipto-textSecondary">Cancel</button>
                 </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {tags.map(tag => (
-                    <div key={tag.id} className="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center group">
+                    <div key={tag.id} className="bg-clipto-surface border border-clipto-divider p-4 rounded-xl flex justify-between items-center group">
                         <div className="flex items-center gap-3">
                             <div className="w-4 h-4 rounded-full" style={{ backgroundColor: tag.color }}></div>
-                            <span className="text-gray-200 font-medium">{tag.name}</span>
+                            <span className="text-clipto-text font-medium">{tag.name}</span>
                         </div>
                         <button
                             onClick={() => deleteTag(tag.id)}
-                            className="p-2 text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="p-2 text-clipto-textSecondary hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                             <Trash2 size={16} />
                         </button>
@@ -87,7 +86,7 @@ export const TagList = () => {
             </div>
 
             {tags.length === 0 && !isCreating && (
-                <div className="flex flex-col items-center justify-center flex-1 text-gray-500">
+                <div className="flex flex-col items-center justify-center flex-1 text-clipto-textSecondary">
                     <TagIcon size={48} className="mb-4 opacity-50" />
                     <p>No tags created yet.</p>
                 </div>
@@ -95,6 +94,3 @@ export const TagList = () => {
         </div>
     );
 };
-
-// Import Trash2 locally for this file since it's used
-import { Trash2 } from 'lucide-react';

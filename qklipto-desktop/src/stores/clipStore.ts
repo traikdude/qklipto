@@ -2,25 +2,63 @@ import { create } from 'zustand';
 import { db } from '../db/database';
 import { Clip } from '../models/Clip';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useUIStore } from './uiStore';
 
-interface ClipState {
-    searchQuery: string;
-    setSearchQuery: (query: string) => void;
-    // We don't need to store clips in Zustand if we use useLiveQuery + Dexie directly in components,
-    // but for complex filtering/UI state, it's useful.
-    // We'll focus on UI state here.
+interface ClipActions {
+    addClip: (clip: Clip) => Promise<void>;
+    updateClip: (id: string, changes: Partial<Clip>) => Promise<void>;
+    deleteClip: (id: string) => Promise<void>;
+    restoreClip: (id: string) => Promise<void>;
+    hardDeleteClip: (id: string) => Promise<void>;
 }
 
-export const useClipStore = create<ClipState>((set) => ({
-    searchQuery: '',
-    setSearchQuery: (query) => set({ searchQuery: query }),
+export const useClipActions = create<ClipActions>(() => ({
+    addClip: async (clip) => {
+        await db.clips.add(clip);
+    },
+    updateClip: async (id, changes) => {
+        await db.clips.update(id, { ...changes, modifyDate: new Date().toISOString(), pendingSync: true });
+    },
+    deleteClip: async (id) => {
+        // Soft delete
+        await db.clips.update(id, { deleted: true, modifyDate: new Date().toISOString(), pendingSync: true });
+    },
+    restoreClip: async (id) => {
+        await db.clips.update(id, { deleted: false, modifyDate: new Date().toISOString(), pendingSync: true });
+    },
+    hardDeleteClip: async (id) => {
+        await db.clips.delete(id);
+    }
 }));
 
-// Helper hook for clips with Dexie Live Query
-export const useClips = () => {
-    // This is a placeholder for the component-level hook
-    // usage: const clips = useLiveQuery(() => db.clips.toArray())
+// Separated hook for reactive data
+export const useClipStore = () => {
+    const { sortOption } = useUIStore();
+    
+    const clips = useLiveQuery(async () => {
+        // Handle sorting
+        // Note: 'modifyDate' is indexed, so it's fast. 'text' is not indexed, so we sort in memory for now.
+        if (sortOption === 'date-desc') {
+            return await db.clips.orderBy('modifyDate').reverse().toArray();
+        } else if (sortOption === 'date-asc') {
+            return await db.clips.orderBy('modifyDate').toArray();
+        } else {
+            // Sort by text/title
+            const allClips = await db.clips.toArray();
+            return allClips.sort((a, b) => {
+                const textA = (a.title || a.text || '').toLowerCase();
+                const textB = (b.title || b.text || '').toLowerCase();
+                if (sortOption === 'name-asc') return textA.localeCompare(textB);
+                return textB.localeCompare(textA);
+            });
+        }
+    }, [sortOption]);
+
+    const actions = useClipActions();
+
     return {
-        // ...
+        clips: clips || [],
+        loading: !clips,
+        ...actions
     };
 };

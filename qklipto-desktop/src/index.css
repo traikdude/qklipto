@@ -1,3 +1,147 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CSS Variables for theming */
+:root {
+    --clipto-primary: #f9aa33;
+    --clipto-primary-dark: #c17c00;
+    --clipto-primary-light: #ffdd6d;
+    --clipto-background: #212121;
+    --clipto-surface: #2E3032;
+    --clipto-surface-light: #494B4C;
+    --clipto-divider: #424242;
+    --clipto-text: #ffffff;
+    --clipto-text-secondary: #b3b3b3;
+    --clipto-text-muted: #757575;
+}
+
+@layer base {
+    body {
+        @apply bg-clipto-background text-clipto-text overflow-hidden;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Focus styles for accessibility */
+    *:focus-visible {
+        @apply outline-none ring-2 ring-clipto-primary ring-offset-2 ring-offset-clipto-background;
+    }
+}
+
+@layer components {
+    /* Drawer overlay */
+    .drawer-overlay {
+        backdrop-filter: blur(2px);
+    }
+
+    /* FAB ripple effect */
+    .fab-ripple {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .fab-ripple::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.15s;
+    }
+
+    .fab-ripple:active::after {
+        opacity: 1;
+    }
+
+    /* Card hover effect */
+    .clip-card {
+        @apply transition-all duration-200;
+    }
+
+    .clip-card:hover {
+        @apply shadow-clipto-lg;
+        transform: translateY(-1px);
+    }
+
+    /* Navigation item active state */
+    .nav-item-active {
+        @apply bg-clipto-primary/15 text-clipto-primary border-r-4 border-clipto-primary;
+    }
+
+    /* Tag pill styles */
+    .tag-pill {
+        @apply px-2 py-0.5 rounded-full text-xs font-medium;
+    }
+
+    /* Input focus styles */
+    .input-clipto {
+        @apply bg-clipto-background border border-clipto-divider rounded-lg px-4 py-3 text-white;
+        @apply placeholder-clipto-textMuted focus:outline-none focus:border-clipto-primary transition-colors;
+    }
+
+    /* Button primary */
+    .btn-primary {
+        @apply bg-clipto-primary hover:bg-clipto-primaryLight active:bg-clipto-primaryDark;
+        @apply text-clipto-background font-medium rounded-lg px-4 py-2 transition-colors;
+    }
+
+    /* Button ghost */
+    .btn-ghost {
+        @apply hover:bg-white/10 rounded-full p-2 transition-colors;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #494B4C;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5c5e60;
+}
+
+/* Scrollbar for specific elements */
+.scrollbar-clipto::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-clipto::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-clipto::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 3px;
+}
+
+/* Line clamp utility */
+.line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+.line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.line-clamp-5 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+}

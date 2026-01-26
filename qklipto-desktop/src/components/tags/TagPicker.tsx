@@ -30,8 +30,8 @@ export const TagPicker = ({ selectedTags, onChange }: TagPickerProps) => {
                         key={tag.id}
                         onClick={() => toggleTag(tag.name)}
                         className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 border transition-all ${isSelected
-                                ? 'border-transparent text-white'
-                                : 'bg-gray-900 border-gray-700 text-gray-400 hover:border-gray-600'
+                            ? 'border-transparent text-white'
+                            : 'bg-clipto-surface border-clipto-divider text-clipto-textSecondary hover:border-clipto-primary'
                             }`}
                         style={isSelected ? { backgroundColor: tag.color, borderColor: tag.color } : {}}
                     >

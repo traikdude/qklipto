@@ -1,80 +1,79 @@
-import React from 'react';
-import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../../db/database';
-import { Copy, Trash2, Smartphone, Cloud } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import React, { useMemo } from 'react';
+import { useClipStore } from '../../stores/clipStore';
+import { ClipCard } from './ClipCard';
+import { useUIStore } from '../../stores/uiStore';
+import { Copy } from 'lucide-react';
+import { Clip } from '../../models/Clip';
 
 export const ClipList = () => {
-    // Real-time subscription to Dexie
-    const clips = useLiveQuery(
-        () => db.clips.orderBy('createDate').reverse().toArray()
-    );
+    const { clips, loading } = useClipStore();
+    const { searchQuery, activeFilter, selectedTags, openEditor, selectionMode, selectedClipIds, toggleClipSelection } = useUIStore();
 
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text);
-        // Add toast notification later
-    };
+    // Filter Logic with memoization
+    const filteredClips = useMemo(() => {
+        return clips.filter(clip => {
+            // Exclude deleted clips
+            if (clip.deleted) return false;
 
-    const deleteClip = async (id: string) => {
-        // Soft delete
-        await db.clips.update(id, { deleted: true, modifyDate: new Date().toISOString(), pendingSync: true });
+            // Search filter
+            const matchesSearch = searchQuery
+                ? clip.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  clip.title?.toLowerCase().includes(searchQuery.toLowerCase())
+                : true;
+
+            // Type filter
+            let matchesFilter = true;
+            if (activeFilter === 'link') {
+                matchesFilter = /^(http|https):\/\/[^ "]+$/.test(clip.text) ||
+                                clip.text.includes('http://') ||
+                                clip.text.includes('https://');
+            } else if (activeFilter === 'favorite') {
+                matchesFilter = clip.fav === true;
+            }
+
+            // Tag filter
+            const matchesTags = selectedTags.length === 0 ||
+                selectedTags.some(tag => clip.tags?.includes(tag));
+
+            return matchesSearch && matchesFilter && matchesTags;
+        });
+    }, [clips, searchQuery, activeFilter, selectedTags]);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <div className="text-clipto-textSecondary">Loading clips...</div>
+            </div>
+        );
     }
 
-    if (!clips) return <div className="p-8 text-center text-gray-500">Loading clips...</div>;
-
-    if (clips.length === 0) {
+    if (filteredClips.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-20 text-gray-500 opacity-60">
+            <div className="flex flex-col items-center justify-center py-20 text-clipto-textSecondary opacity-60">
                 <Copy size={48} className="mb-4" />
-                <p className="text-xl">No clips yet</p>
-                <p className="text-sm">Create one above to get started</p>
+                <p className="text-xl">
+                    {searchQuery ? 'No matching clips' : 'No clips yet'}
+                </p>
+                <p className="text-sm">
+                    {searchQuery
+                        ? 'Try a different search term'
+                        : 'Tap the + button to create one'}
+                </p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-4 pb-20">
-            {clips.filter(c => !c.deleted).map((clip) => (
-                <div
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-max pb-24">
+            {filteredClips.map((clip: Clip) => (
+                <ClipCard
                     key={clip.id}
-                    className="group bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-lg p-5 transition-all shadow-sm hover:shadow-md"
-                >
-                    <div className="flex justify-between items-start mb-2">
-                        <span className="text-xs font-mono text-gray-500 bg-gray-800 px-2 py-0.5 rounded">
-                            {formatDistanceToNow(new Date(clip.createDate), { addSuffix: true })}
-                        </span>
-                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                                onClick={() => copyToClipboard(clip.text)}
-                                className="p-1.5 hover:bg-gray-700 rounded text-gray-400 hover:text-white"
-                                title="Copy"
-                            >
-                                <Copy size={16} />
-                            </button>
-                            <button
-                                onClick={() => deleteClip(clip.id)}
-                                className="p-1.5 hover:bg-red-900/50 rounded text-gray-400 hover:text-red-400"
-                                title="Delete"
-                            >
-                                <Trash2 size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    <pre className="font-sans text-gray-300 whitespace-pre-wrap break-words leading-relaxed max-h-60 overflow-hidden text-base">
-                        {clip.text}
-                    </pre>
-
-                    <div className="mt-4 pt-3 border-t border-gray-800/50 flex justify-between items-center text-xs text-gray-600">
-                        <div className="flex gap-2">
-                            {/* Sync Status Indicators */}
-                            {clip.pendingSync && <span className="flex items-center gap-1 text-emerald-500/80"><Smartphone size={12} /> Pending</span>}
-                        </div>
-                        <div>
-                            {clip.type === "0" ? "Text" : "Markdown"}
-                        </div>
-                    </div>
-                </div>
+                    clip={clip}
+                    onEdit={() => openEditor(clip.id)}
+                    isSelected={selectedClipIds.includes(clip.id)}
+                    selectionMode={selectionMode}
+                    onToggleSelection={toggleClipSelection}
+                />
             ))}
         </div>
     );

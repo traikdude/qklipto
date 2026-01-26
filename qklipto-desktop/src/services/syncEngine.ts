@@ -1,6 +1,6 @@
 import { db } from '../db/database';
-import { localSyncService } from './localSync.ts';
-import { firebaseSyncService } from './firebaseSync.ts';
+import { localSyncService } from './localSync';
+import { firebaseSyncService } from './firebaseSync';
 import { useSettingsStore } from '../stores/settingsStore';
 
 export const syncEngine = {
