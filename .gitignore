@@ -47,9 +47,8 @@ CliptoBackups/
 # ============================================
 # Generated Reports
 # ============================================
-SourceAnalysisReport.md
-DatabaseAnalysisReport.md
-*HASH_REPORT.txt
+# (SourceAnalysisReport.md, DatabaseAnalysisReport.md, and HASH_REPORT.txt
+#  are now tracked as project deliverables)
 
 # ============================================
 # OS Files
@@ -129,15 +128,11 @@ test-data/
 # ============================================
 # User Artifacts & Temp
 # ============================================
-backups/
+backups/*.json
+backups/Clipto_*/
 archives/
 data/
 recovery/
-tools/
 qklipto-sync/
-ZEN-*.md
-*_session_transcript.md
 clipto-native-import.json
-test.ps1
-session transcripts/
 google-services.json
