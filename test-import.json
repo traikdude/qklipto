@@ -1,0 +1,22 @@
+{
+    "clips": [
+        {
+            "id": "zenith-import-001",
+            "text": "🚀 Zenith Test: Direct Injection Worked!\nThis note was imported via the System Tray -> Import Data menu.",
+            "createDate": 1770000000000,
+            "modifyDate": 1770000000000,
+            "fav": true,
+            "tags": [
+                "Zenith",
+                "Test"
+            ]
+        },
+        {
+            "id": "zenith-import-002",
+            "text": "Second note test.",
+            "createDate": 1770000001000,
+            "modifyDate": 1770000001000,
+            "fav": false
+        }
+    ]
+}
