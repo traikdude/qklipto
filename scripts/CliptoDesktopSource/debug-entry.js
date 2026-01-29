@@ -29,6 +29,46 @@ const UI_PAYLOAD = `
     try {
         console.log("🚀 QKLIPTO AGENT RUNNING");
 
+        // EXPOSED API FOR MAIN PROCESS INJECTION
+        window.importClips = async (clips) => {
+            console.log("📥 Received Injection Payload:", clips.length, "clips");
+            if (!clips || clips.length === 0) {
+                alert("No clips to import.");
+                return;
+            }
+
+            try {
+                const request = indexedDB.open("clipto");
+                request.onsuccess = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains("clips")) {
+                         alert("Error: 'clips' database not found. Please create a note manually first!"); return; 
+                    }
+                    const tx = db.transaction(["clips"], "readwrite");
+                    const store = tx.objectStore("clips");
+                    let count = 0;
+                    clips.forEach(c => { store.put(c); count++; });
+                    
+                    tx.oncomplete = () => {
+                        console.log("Transaction complete. Reloading...");
+                        alert(`Successfully imported ${ count } clips! App will reload.`);
+                        const { ipcRenderer } = require('electron');
+                        ipcRenderer.send('trigger-reload');
+                    };
+                    tx.onerror = (e) => {
+                        console.error("Transaction Error:", e);
+                        alert("Import Transaction Failed: " + e.target.error);
+                    };
+                };
+                request.onerror = (e) => {
+                    alert("Could not open Database: " + e.target.error);
+                };
+            } catch (err) {
+                console.error("ImportClips Error", err);
+                alert("Critical Import Error: " + err.message);
+            }
+        };
+
         function createToolbar() {
             if (document.getElementById('qklipto-toolbar')) return;
 
