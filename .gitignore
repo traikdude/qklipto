@@ -1,138 +1,59 @@
-# QKlipto .gitignore
+# QKlipto Refined .gitignore
+# Based on Zen-20260128-1633 Analysis
 
-# ============================================
-# Installation Files
-# ============================================
-clipto-*.exe
-*.exe
-*.msi
-*.dmg
-*.deb
-
-# ============================================
-# Extracted Source Code
-# ============================================
-**/CliptoDesktopSource/
-extracted-source/
-source/
-android-source/
-android-source-zip/
-clipto-android-main/
-
-# ============================================
-# Build Artifacts
-# ============================================
-*.apk
-*.aab
+# == Reproducible Artifacts ==
+node_modules/
+**/node_modules/
 build/
 dist/
 out/
+.gradle/
+*.class
+*.dex
 
-# ============================================
-# Node Modules
-# ============================================
-node_modules/
-package-lock.json
-yarn.lock
-
-# ============================================
-# Clipto Data & Backups
-# ============================================
-CliptoBackups/
-*.db
-*.sqlite
-*.sqlite3
-*.db-journal
-
-# ============================================
-# Generated Reports
-# ============================================
-# (SourceAnalysisReport.md, DatabaseAnalysisReport.md, and HASH_REPORT.txt
-#  are now tracked as project deliverables)
-
-# ============================================
-# OS Files
-# ============================================
-# Windows
-Thumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.lnk
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Linux
-*~
-.directory
-
-# ============================================
-# IDE & Editors
-# ============================================
-.vscode/
-.idea/
-*.swp
-*.swo
-*.swn
-.vs/
-
-# ============================================
-# Logs
-# ============================================
-*.log
-logs/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# ============================================
-# Environment
-# ============================================
-.env
-.env.local
-.env.*.local
-
-# ============================================
-# Temporary Files
-# ============================================
-*.tmp
-*.temp
-~$*
-
-# ============================================
-# Archives
-# ============================================
+# == Large Binaries ==
+*.exe
+*.apk
 *.zip
 *.tar.gz
-*.rar
 *.7z
 
-# EXCEPTION: Keep specific source archives if needed
-# !clipto-android-source.zip
-
-# ============================================
-# Personal Data
-# ============================================
-# Never commit personal Clipto databases or backups
-**/AppData/Roaming/Clipto/**
-**/OneDrive/CliptoBackups/**
-
-# ============================================
-# Testing
-# ============================================
-test-data/
-*.test.db
-
-# ============================================
-# User Artifacts & Temp
-# ============================================
-backups/*.json
-backups/Clipto_*/
-archives/
-data/
-recovery/
+# == Sensitive Data / Local Config ==
+.env
+.env.*
+google-services.json
 qklipto-sync/
 clipto-native-import.json
-google-services.json
+local.properties
+
+# == Internal Runtime Data ==
+recovery/
+archives/
+data/
+backups/*.json
+backups/Clipto_*/
+**/AppData/Roaming/Clipto/**
+
+# == Source Code Snapshots (to be ignored) ==
+android-source/
+android-source-zip/
+extracted-source/
+
+# == IDE & OS Files ==
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+~$*
+
+# == Logs ==
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# == TRACKED DELIVERABLES (Explicitly not ignored by default) ==
+# Tools, Phase scripts, Transcripts, and Reports should be tracked.
+# They are NOT in the ignore list above.
