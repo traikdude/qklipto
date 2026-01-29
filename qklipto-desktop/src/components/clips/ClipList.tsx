@@ -18,15 +18,15 @@ export const ClipList = () => {
             // Search filter
             const matchesSearch = searchQuery
                 ? clip.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  clip.title?.toLowerCase().includes(searchQuery.toLowerCase())
+                clip.title?.toLowerCase().includes(searchQuery.toLowerCase())
                 : true;
 
             // Type filter
             let matchesFilter = true;
             if (activeFilter === 'link') {
                 matchesFilter = /^(http|https):\/\/[^ "]+$/.test(clip.text) ||
-                                clip.text.includes('http://') ||
-                                clip.text.includes('https://');
+                    clip.text.includes('http://') ||
+                    clip.text.includes('https://');
             } else if (activeFilter === 'favorite') {
                 matchesFilter = clip.fav === true;
             }
@@ -69,10 +69,11 @@ export const ClipList = () => {
                 <ClipCard
                     key={clip.id}
                     clip={clip}
-                    onEdit={() => openEditor(clip.id)}
-                    isSelected={selectedClipIds.includes(clip.id)}
-                    selectionMode={selectionMode}
-                    onToggleSelection={toggleClipSelection}
+                    onSelect={() => openEditor(clip.id)}
+                    toggleFavorite={(id, e) => {
+                        // Implement favorite toggle logic here or call store
+                        console.log('Toggle fav', id);
+                    }}
                 />
             ))}
         </div>

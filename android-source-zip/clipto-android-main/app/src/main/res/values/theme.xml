@@ -177,22 +177,22 @@
     </style>
 
     <style name="MyTheme.Dark" parent="Theme.MaterialComponents.NoActionBar.Bridge">
-        <item name="colorAccent">#f9aa33</item>
-        <item name="colorPrimary">#FF2E3032</item>
+        <item name="colorAccent">#fbc02d</item>
+        <item name="colorPrimary">#212121</item>
         <item name="colorPrimaryDark">?colorPrimaryInverse</item>
-        <item name="colorPrimaryLight">#FF494B4C</item>
-        <item name="colorPrimaryInverse">#FF212121</item>
-        <item name="colorContext">#FF2E3032</item>
+        <item name="colorPrimaryLight">#2a2a2a</item>
+        <item name="colorPrimaryInverse">#212121</item>
+        <item name="colorContext">#1a1a1a</item>
         <item name="colorCustomTagText">#000</item>
-        <item name="colorCustomTagBackground">#CCf9aa33</item>
-        <item name="colorHighlightBackground">#99FAAA32</item>
+        <item name="colorCustomTagBackground">#CCfbc02d</item>
+        <item name="colorHighlightBackground">#99fbc02d</item>
         <item name="colorNotificationBackground">#121212</item>
 
         <item name="listItemSelected">#747778</item>
 
         <item name="actionIconPadding">@dimen/actionIconPadding</item>
         <item name="actionIconSize">@dimen/actionIconSize</item>
-        <item name="actionIconColorHighlight">#f9aa33</item>
+        <item name="actionIconColorHighlight">#fbc02d</item>
         <item name="actionIconColorInactive">#DADCE0</item>
         <item name="actionIconColorNormal">#fff</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
@@ -211,7 +211,7 @@
 
         <item name="swipeActionDelete">@color/colorNegative</item>
         <item name="swipeActionCopy">@color/colorPositive</item>
-        <item name="swipeActionStarred">#f9aa33</item>
+        <item name="swipeActionStarred">#fbc02d</item>
 
         <item name="myBackgroundHighlight">#1AFFFFFF</item>
         <item name="myTextAppearanceCaption">@style/MyCaption</item>

@@ -225,7 +225,7 @@ export const SettingsPage = () => {
                     </div>
                 </div>
                 <p className="mt-3 text-sm text-clipto-textSecondary">
-                    Import clips from a .json backup file (Clipto format).
+                    Import clips from a .json backup file (QKlipto format).
                 </p>
             </section>
 

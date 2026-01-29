@@ -9,7 +9,7 @@ export default defineConfig({
         react(),
         electron([
             {
-                entry: 'electron/main.ts',
+                entry: 'src-electron/main.ts',
                 onstart(options) {
                     options.startup()
                 },
@@ -23,7 +23,7 @@ export default defineConfig({
                 },
             },
             {
-                entry: 'electron/preload.ts',
+                entry: 'src-electron/preload.ts',
                 onstart(options) {
                     options.reload()
                 },

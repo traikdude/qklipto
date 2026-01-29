@@ -2,18 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables for theming */
+/* CSS Variables for theming - LEGACY APP STYLE */
 :root {
-    --clipto-primary: #f9aa33;
-    --clipto-primary-dark: #c17c00;
-    --clipto-primary-light: #ffdd6d;
+    --clipto-primary: #fbc02d;
+    /* Legacy Yellow */
+    --clipto-primary-dark: #c17900;
+    --clipto-primary-light: #ffdd4b;
     --clipto-background: #212121;
-    --clipto-surface: #2E3032;
-    --clipto-surface-light: #494B4C;
-    --clipto-divider: #424242;
-    --clipto-text: #ffffff;
-    --clipto-text-secondary: #b3b3b3;
-    --clipto-text-muted: #757575;
+    /* Main Content BG */
+    --clipto-surface: #1a1a1a;
+    /* Sidebar & Bottom Bar BG */
+    --clipto-surface-light: #2a2a2a;
+    /* Borders / Card Hover */
+    --clipto-divider: #2a2a2a;
+    --clipto-text: #e2e8f0;
+    /* Slate-200/300 */
+    --clipto-text-secondary: #94a3b8;
+    /* Slate-400/500 */
+    --clipto-text-muted: #64748b;
 }
 
 @layer base {
@@ -29,9 +35,10 @@
 }
 
 @layer components {
+
     /* Drawer overlay */
     .drawer-overlay {
-        backdrop-filter: blur(2px);
+        @apply fixed inset-0 bg-black/60 backdrop-blur-[1px] z-40;
     }
 
     /* FAB ripple effect */
@@ -44,7 +51,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
         opacity: 0;
         transition: opacity 0.15s;
     }
@@ -53,19 +60,22 @@
         opacity: 1;
     }
 
-    /* Card hover effect */
+    /* LEGACY Card Style */
     .clip-card {
-        @apply transition-all duration-200;
+        @apply bg-clipto-surface border-clipto-divider rounded-lg p-4 relative transition-all duration-200 border;
     }
 
     .clip-card:hover {
-        @apply shadow-clipto-lg;
-        transform: translateY(-1px);
+        @apply border-clipto-textSecondary shadow-lg;
     }
 
     /* Navigation item active state */
     .nav-item-active {
-        @apply bg-clipto-primary/15 text-clipto-primary border-r-4 border-clipto-primary;
+        @apply bg-[#333] text-white;
+    }
+
+    .nav-item {
+        @apply text-clipto-textSecondary hover:bg-[#252525] hover:text-clipto-text transition-colors;
     }
 
     /* Tag pill styles */
@@ -75,14 +85,13 @@
 
     /* Input focus styles */
     .input-clipto {
-        @apply bg-clipto-background border border-clipto-divider rounded-lg px-4 py-3 text-white;
-        @apply placeholder-clipto-textMuted focus:outline-none focus:border-clipto-primary transition-colors;
+        @apply bg-[#2a2a2a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-slate-200;
+        @apply focus:bg-[#252525] focus:outline-none transition-colors;
     }
 
     /* Button primary */
     .btn-primary {
-        @apply bg-clipto-primary hover:bg-clipto-primaryLight active:bg-clipto-primaryDark;
-        @apply text-clipto-background font-medium rounded-lg px-4 py-2 transition-colors;
+        @apply bg-clipto-primary hover:bg-white text-[#212121] font-bold rounded-lg px-4 py-2 transition-colors uppercase tracking-wider text-xs;
     }
 
     /* Button ghost */
@@ -93,38 +102,24 @@
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: #1e1e1e;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #494B4C;
-    border-radius: 3px;
+    background: #333;
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #5c5e60;
+    background: #444;
 }
 
-/* Scrollbar for specific elements */
-.scrollbar-clipto::-webkit-scrollbar {
-    width: 6px;
-}
-
-.scrollbar-clipto::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.scrollbar-clipto::-webkit-scrollbar-thumb {
-    background: #424242;
-    border-radius: 3px;
-}
-
-/* Line clamp utility */
+/* Line clamps */
 .line-clamp-1 {
     overflow: hidden;
     display: -webkit-box;
@@ -137,11 +132,4 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
-}
-
-.line-clamp-5 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
 }

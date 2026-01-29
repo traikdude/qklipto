@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell } from 'electron'
+const { app, BrowserWindow } = require('electron')
 import path from 'node:path'
 
 // The built directory structure

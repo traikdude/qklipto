@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation,MissingDefaultResource,MissingTranslation">
 
-    <string name="app_name" translatable="false">Clipto</string>
+    <string name="app_name" translatable="false">QKlipto</string>
     <string name="app_guide">App Guide</string>
 
     <string name="common_mask_date_time" translatable="false">yyyy-MM-dd HH:mm</string>
@@ -28,7 +28,7 @@
     <string name="error_confirm_exit">Click the `Back` button again to exit</string>
     <string name="essentials.errors.unknown">An unknown error occurred. Please try again</string>
 
-    <string name="action.process_text" translatable="false">Clipto…</string>
+    <string name="action.process_text" translatable="false">QKlipto…</string>
 
     <string name="error_data_empty">No data was found.</string>
     <string name="error.unexpected">An unexpected error has occurred</string>
@@ -517,7 +517,7 @@
     ]]></string>
     <string name="runes.hide_on_copy.title">Blowing Copy</string>
     <string name="runes.hide_on_copy.description"><![CDATA[
-    When the rune is activated, any action of copying text inside Clipto (except contextual actions in input fields) will hide the application.
+    When the rune is activated, any action of copying text inside QKlipto (except contextual actions in input fields) will hide the application.
     \n
     \n
     This rune allows you to minimize the number of steps when pasting copied text outside the application.
@@ -566,12 +566,12 @@
     <string name="settings.campaign.rate.title">Your opinion matters</string>
     <string name="settings.campaign.rate.message">It takes less then a minute but has a lasting impact on our future improvement.</string>
     <string name="settings.campaign.rate.button">Rate Us on Google Play</string>
-    <string name="settings.campaign.rate.question">How was your experience with Clipto?</string>
+    <string name="settings.campaign.rate.question">How was your experience with QKlipto?</string>
     <string name="settings.campaign.rate.feedback.title">Feedback</string>
-    <string name="settings.campaign.rate.feedback.message">Can you tell us how we can improve Clipto? Your opinion is very important.</string>
+    <string name="settings.campaign.rate.feedback.message">Can you tell us how we can improve QKlipto? Your opinion is very important.</string>
     <string name="settings.campaign.rate.feedback.toast">Can you leave a nice review on Google Play? Thanks for your support!</string>
 
-    <string name="settings.campaign.share.title">Get a bonus by sharing Clipto with your friends!</string>
+    <string name="settings.campaign.share.title">Get a bonus by sharing QKlipto with your friends!</string>
     <string name="settings.campaign.share.more">Learn more</string>
     <string name="settings.campaign.share.action">Share the Link</string>
 
@@ -594,12 +594,12 @@
     <string name="settings.track_clipboard.q.message">Starting in Android Q, use our new approach to create notes from the Clipboard.</string>
     <string name="settings.track_clipboard.q.description">Starting in Android Q, only the app that currently has focus can access Clipboard data.</string>
     <string name="settings.track_clipboard.q.solution.title">To bypass this restriction, use one of the following solutions:</string>
-    <string name="settings.track_clipboard.q.solution.1.title">\'Clipto…\' action instead of \'Copy\'</string>
-    <string name="settings.track_clipboard.q.solution.1">When you have selected text to copy, use the \'Clipto…\' action instead of the \'Copy\' if it is available in the context menu of the active application.</string>
+    <string name="settings.track_clipboard.q.solution.1.title">\'QKlipto…\' action instead of \'Copy\'</string>
+    <string name="settings.track_clipboard.q.solution.1">When you have selected text to copy, use the \'QKlipto…\' action instead of the \'Copy\' if it is available in the context menu of the active application.</string>
     <string name="settings.track_clipboard.q.solution.2.title">Standard \'Copy\' action in combination with \'Paste\' in the notification area</string>
-    <string name="settings.track_clipboard.q.solution.2">If the \'Clipto…\' action is not available or you still want to use standard \'Copy\' action then do not forget to click on the \'Paste\' button in the notification to create a note from the current clipboard data.</string>
+    <string name="settings.track_clipboard.q.solution.2">If the \'QKlipto…\' action is not available or you still want to use standard \'Copy\' action then do not forget to click on the \'Paste\' button in the notification to create a note from the current clipboard data.</string>
     <string name="settings.track_clipboard.q.solution.3.title">Standard \'Copy\' action as it was before Android Q</string>
-    <string name="settings.track_clipboard.q.solution.3">This solution requires advanced configuration to be done with the app via a computer. To make Clipto work again please run the following ADB commands on your computer:</string>
+    <string name="settings.track_clipboard.q.solution.3">This solution requires advanced configuration to be done with the app via a computer. To make QKlipto work again please run the following ADB commands on your computer:</string>
     <string name="settings.track_clipboard.q.solution.3.command" translatable="false"><![CDATA[
         adb -d shell pm grant %1$s android.permission.READ_LOGS;
         \n\n
@@ -610,7 +610,7 @@
     </string>
     <string name="settings.track_clipboard.q.solution.3.description">After successful run you should see the additional action in the custom notifications of the app that lets you to turn on/off monitoring of the clipboard. Also this warning will be gone from the settings.</string>
     <string name="settings.track_clipboard.q.emulate.title">Emulate Copy Action</string>
-    <string name="settings.track_clipboard.q.emulate.description">When you tap the custom \'Clipto…\' or \'Paste\' action, the application will immediately create a note with the text from the clipboard instead of displaying a confirmation dialog.</string>
+    <string name="settings.track_clipboard.q.emulate.description">When you tap the custom \'QKlipto…\' or \'Paste\' action, the application will immediately create a note with the text from the clipboard instead of displaying a confirmation dialog.</string>
     <string name="settings.universal_clipboard.title">Universal Clipboard</string>
     <string name="settings.universal_clipboard.description">Any text copied to the Clipboard will be synced between all your devices. It will also be automatically inserted into the Clipboard where this setting is activated.</string>
     <string name="settings.notification_style.title">Notification Style</string>
@@ -897,12 +897,12 @@
     <string name="desktop.main.menu.download.linux" translatable="false">Linux</string>
     <string name="desktop.main.menu.download.mac" translatable="false">macOS</string>
     <string name="desktop.main.menu.resources">Resources</string>
-    <string name="desktop.main.menu.open">Open Clipto in your browser</string>
+    <string name="desktop.main.menu.open">Open QKlipto in your browser</string>
     <string name="desktop.main.features.title.1">Write easily and quickly on any device.</string>
     <string name="desktop.main.features.title.2">All-in-one Notepad &amp; Clipboard Manager with a focus on speed and productivity that works on both your desktop and phone.</string>
     <string name="desktop.main.features.title.3">Your personal writing companion.</string>
     <string name="desktop.main.features.title.4">A comprehensive solution for convenient and efficient work with notes, snippets, clipboard, files, and other information that requires quick access via any device.</string>
-    <string name="desktop.main.features.title.5">What makes Clipto special?</string>
+    <string name="desktop.main.features.title.5">What makes QKlipto special?</string>
 
     <string name="desktop.get_started.language">Choose your language</string>
     <string name="desktop.get_started.theme">Choose preferred theme</string>
@@ -968,7 +968,7 @@
     <string name="site.integrations.zapier" translatable="false">Zapier</string>
     <string name="site.integrations.zapier.title">Zapier Integration</string>
     <string name="site.integrations.zapier.description"><![CDATA[
-Connect Clipto with Zapier and run your workflows at blazing speed.
+Connect QKlipto with Zapier and run your workflows at blazing speed.
 \n
 ## Your clipboard as a workflow trigger
 \n
@@ -978,9 +978,9 @@ To start using this functionality with Zapier, just follow these steps:
 \n
 1. Configure in Zapier the trigger **Text Copied to the Clipboard**.
 \n
-2. Install Clipto on your device (mobile, desktop) and **sign in** with the same account
+2. Install QKlipto on your device (mobile, desktop) and **sign in** with the same account
 \n
-3. Open Clipto and activate the settings **Notes from Clipboard** and **Universal Clipboard**
+3. Open QKlipto and activate the settings **Notes from Clipboard** and **Universal Clipboard**
 \n
 4. That is all. Now you can use the standard combination **Ctrl+C** (or Copy in the context menu) to activate a workflow with copied text.
     ]]></string>
