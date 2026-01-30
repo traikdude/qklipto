@@ -1,42 +1,27 @@
 import React from 'react';
 import { useSettingsStore } from '../stores/settingsStore';
+import { useAuthStore } from '../stores/authStore';
+import { useUIStore } from '../stores/uiStore';
 import { Smartphone, Cloud, Save, AlertCircle, LogOut, User, Upload, Download } from 'lucide-react';
-import { auth } from '../lib/firebase';
-import { GoogleAuthProvider, signInWithPopup, User as FirebaseUser } from 'firebase/auth';
+import { signOut } from '../services/authService';
 import { importData } from '../services/importService';
 import { exportData } from '../services/exportService';
 import { syncEngine } from '../services/syncEngine';
+import { ChameleonSkinSettings } from '../components/settings/ChameleonSkinSettings';
 
 export const SettingsPage = () => {
     const {
         syncMode, setSyncMode,
-        localServerUrl, setLocalServerUrl,
-        theme, setTheme
+        localServerUrl, setLocalServerUrl
     } = useSettingsStore();
 
+    const { user, isAuthenticated } = useAuthStore();
+    const { setAuthDialogOpen } = useUIStore();
+
     const [urlInput, setUrlInput] = React.useState(localServerUrl);
-    const [user, setUser] = React.useState<FirebaseUser | null>(null);
-
-    React.useEffect(() => {
-        if (!auth) return;
-        return auth.onAuthStateChanged((u) => setUser(u));
-    }, []);
-
-    const handleGoogleSignIn = async () => {
-        if (!auth) {
-            alert("Firebase not initialized. Check console.");
-            return;
-        }
-        try {
-            await signInWithPopup(auth, new GoogleAuthProvider());
-        } catch (e) {
-            console.error("Sign in failed", e);
-            alert("Sign in failed. See console.");
-        }
-    };
 
     const handleSignOut = () => {
-        auth?.signOut();
+        signOut();
     };
 
     const handleSaveUrl = () => {
@@ -142,11 +127,7 @@ export const SettingsPage = () => {
                 <section className="mb-10 bg-clipto-surface rounded-xl p-6 border border-clipto-surfaceLight animate-in fade-in">
                     <h2 className="text-xl font-semibold text-clipto-text mb-4">Cloud Account</h2>
 
-                    {!auth ? (
-                        <div className="p-4 bg-red-900/20 text-red-300 rounded-lg text-sm border border-red-800">
-                            Firebase Configuration Invalid. Check src/lib/firebase.ts
-                        </div>
-                    ) : user ? (
+                    {isAuthenticated && user ? (
                         <div className="flex items-center justify-between bg-clipto-surfaceLight p-4 rounded-lg border border-clipto-divider">
                             <div className="flex items-center gap-3">
                                 {user.photoURL ? (
@@ -172,13 +153,11 @@ export const SettingsPage = () => {
                         <div className="text-center py-6 bg-clipto-surfaceLight/30 rounded-lg border border-clipto-divider border-dashed">
                             <p className="text-clipto-textSecondary mb-4">Sign in to sync your clips across devices</p>
                             <button
-                                onClick={handleGoogleSignIn}
+                                onClick={() => setAuthDialogOpen(true)}
                                 className="px-6 py-2.5 bg-white text-gray-900 hover:bg-gray-100 rounded-lg font-medium transition-colors flex items-center gap-2 mx-auto"
                             >
-                                <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z" />
-                                </svg>
-                                Sign in with Google
+                                <User size={20} />
+                                Sign in / Create Account
                             </button>
                         </div>
                     )}
@@ -189,13 +168,35 @@ export const SettingsPage = () => {
             <section className="mb-10 bg-clipto-surface rounded-xl p-6 border border-clipto-surfaceLight">
                 <h2 className="text-xl font-semibold text-clipto-text mb-4">Data Management</h2>
                 <div className="flex gap-4">
-                    <button
-                        onClick={exportData}
-                        className="px-4 py-2 bg-clipto-surfaceLight hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-colors"
-                    >
-                        <Download size={18} />
-                        Export JSON
-                    </button>
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm text-clipto-textSecondary mb-1">Export Format</label>
+                        <div className="flex flex-wrap gap-2">
+                            <button
+                                onClick={() => exportData('json')}
+                                className="px-3 py-2 bg-clipto-surfaceLight hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-colors text-sm"
+                            >
+                                <Download size={16} /> JSON
+                            </button>
+                            <button
+                                onClick={() => exportData('txt')}
+                                className="px-3 py-2 bg-clipto-surfaceLight hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-colors text-sm"
+                            >
+                                <Download size={16} /> Text
+                            </button>
+                            <button
+                                onClick={() => exportData('md')}
+                                className="px-3 py-2 bg-clipto-surfaceLight hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-colors text-sm"
+                            >
+                                <Download size={16} /> Markdown
+                            </button>
+                            <button
+                                onClick={() => exportData('html')}
+                                className="px-3 py-2 bg-clipto-surfaceLight hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-colors text-sm"
+                            >
+                                <Download size={16} /> HTML
+                            </button>
+                        </div>
+                    </div>
 
                     <div className="relative">
                         <input
@@ -229,27 +230,8 @@ export const SettingsPage = () => {
                 </p>
             </section>
 
-            {/* Theme Config */}
-            <section className="bg-clipto-surface rounded-xl p-6 border border-clipto-surfaceLight">
-                <h2 className="text-xl font-semibold text-clipto-text mb-4">Appearance</h2>
-                <div className="flex items-center gap-4">
-                    <span className="text-clipto-textSecondary">Theme Mode:</span>
-                    <div className="flex bg-clipto-surfaceLight rounded-lg p-1">
-                        <button
-                            onClick={() => setTheme('light')}
-                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${theme === 'light' ? 'bg-white text-gray-900 shadow' : 'text-clipto-textSecondary hover:text-white'}`}
-                        >
-                            Light
-                        </button>
-                        <button
-                            onClick={() => setTheme('dark')}
-                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${theme === 'dark' ? 'bg-black/40 text-white shadow' : 'text-clipto-textSecondary hover:text-white'}`}
-                        >
-                            Dark
-                        </button>
-                    </div>
-                </div>
-            </section>
+            {/* Chameleon Skin - Appearance & Theme Config */}
+            <ChameleonSkinSettings />
         </div>
     );
 };

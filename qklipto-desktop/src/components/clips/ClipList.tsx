@@ -1,12 +1,15 @@
 import React, { useMemo } from 'react';
 import { useClipStore } from '../../stores/clipStore';
+import { useFolderStore } from '../../stores/folderStore';
 import { ClipCard } from './ClipCard';
 import { useUIStore } from '../../stores/uiStore';
 import { Copy } from 'lucide-react';
 import { Clip } from '../../models/Clip';
 
+
 export const ClipList = () => {
     const { clips, loading } = useClipStore();
+    const { selectedFolderId } = useFolderStore();
     const { searchQuery, activeFilter, selectedTags, openEditor, selectionMode, selectedClipIds, toggleClipSelection } = useUIStore();
 
     // Filter Logic with memoization
@@ -14,6 +17,11 @@ export const ClipList = () => {
         return clips.filter(clip => {
             // Exclude deleted clips
             if (clip.deleted) return false;
+
+            // Folder filter (null = show all clips, otherwise show only clips in selected folder)
+            if (selectedFolderId !== null && clip.folderId !== selectedFolderId) {
+                return false;
+            }
 
             // Search filter
             const matchesSearch = searchQuery
@@ -37,7 +45,7 @@ export const ClipList = () => {
 
             return matchesSearch && matchesFilter && matchesTags;
         });
-    }, [clips, searchQuery, activeFilter, selectedTags]);
+    }, [clips, searchQuery, activeFilter, selectedTags, selectedFolderId]);
 
     if (loading) {
         return (

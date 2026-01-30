@@ -86,24 +86,90 @@ export const syncEngine = {
     },
 
     async performCloudSync(meta: any) {
+        // 1. PUSH Changes
         const pendingClips = await db.clips.filter(c => !!c.pendingSync).toArray();
-        if (pendingClips.length > 0) {
-            await firebaseSyncService.push(pendingClips);
-            const ids = pendingClips.map(c => c.id);
-            await db.transaction('rw', db.clips, async () => {
-                for (const id of ids) {
-                    await db.clips.update(id, { pendingSync: false });
-                }
-            });
+        const pendingFolders = await db.folders.filter(f => !!f.pendingSync).toArray();
+
+        if (pendingClips.length > 0 || pendingFolders.length > 0) {
+            console.log(`Pushing ${pendingClips.length} clips and ${pendingFolders.length} folders...`);
+            await firebaseSyncService.push(pendingClips, pendingFolders);
+
+            // A. Clear pending flag for Clips
+            if (pendingClips.length > 0) {
+                const ids = pendingClips.map(c => c.id);
+                await db.transaction('rw', db.clips, async () => {
+                    for (const id of ids) {
+                        await db.clips.update(id, { pendingSync: false });
+                    }
+                });
+            }
+
+            // B. Clear pending flag for Folders
+            if (pendingFolders.length > 0) {
+                const ids = pendingFolders.map(f => f.id);
+                await db.transaction('rw', db.folders, async () => {
+                    for (const id of ids) {
+                        await db.folders.update(id, { pendingSync: false });
+                    }
+                });
+            }
         }
 
+        // 2. PULL Changes
         const pullResult = await firebaseSyncService.pull(meta.lastSyncTime);
+
         if (pullResult.hasUpdates) {
-            await db.transaction('rw', db.clips, async () => {
-                for (const remoteClip of pullResult.clips) {
-                    await db.clips.put({ ...remoteClip, pendingSync: false });
-                }
-            });
+            console.log(`Received ${pullResult.clips.length} clip updates and ${pullResult.folders.length} folder updates...`);
+
+            // Process Clip Updates
+            if (pullResult.clips.length > 0) {
+                await db.transaction('rw', db.clips, async () => {
+                    for (const remoteClip of pullResult.clips) {
+                        const localClip = await db.clips.get(remoteClip.id);
+                        let shouldUpdate = true;
+
+                        if (localClip) {
+                            // Conflict Resolution: Last Write Wins
+                            // If local has unscynced changes, check timestamps
+                            if (localClip.pendingSync) {
+                                const localDate = new Date(localClip.modifyDate).getTime();
+                                const remoteDate = new Date(remoteClip.modifyDate).getTime();
+                                if (localDate > remoteDate) {
+                                    shouldUpdate = false; // Local is newer, keep it
+                                }
+                            }
+                        }
+
+                        if (shouldUpdate) {
+                            await db.clips.put({ ...remoteClip, pendingSync: false });
+                        }
+                    }
+                });
+            }
+
+            // Process Folder Updates
+            if (pullResult.folders.length > 0) {
+                await db.transaction('rw', db.folders, async () => {
+                    for (const remoteFolder of pullResult.folders) {
+                        const localFolder = await db.folders.get(remoteFolder.id);
+                        let shouldUpdate = true;
+
+                        if (localFolder) {
+                            if (localFolder.pendingSync) {
+                                const localDate = new Date(localFolder.updatedAt).getTime();
+                                const remoteDate = new Date(remoteFolder.updatedAt).getTime();
+                                if (localDate > remoteDate) {
+                                    shouldUpdate = false;
+                                }
+                            }
+                        }
+
+                        if (shouldUpdate) {
+                            await db.folders.put({ ...remoteFolder, pendingSync: false });
+                        }
+                    }
+                });
+            }
         }
     }
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Save, Tag as TagIcon } from 'lucide-react';
 import { useClipStore } from '../../stores/clipStore';
 import { v4 as uuidv4 } from 'uuid';
+import { TipTapEditor } from '../editor/TipTapEditor';
 
 interface ClipEditorModalProps {
     isOpen: boolean;
@@ -59,14 +60,13 @@ export const ClipEditorModal: React.FC<ClipEditorModalProps> = ({ isOpen, onClos
                     </button>
                 </div>
 
+
+
                 {/* Body */}
-                <div className="flex-1 p-4 overflow-y-auto">
-                    <textarea
-                        placeholder="Type something..."
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        className="w-full h-80 bg-transparent text-clipto-text resize-none outline-none text-base leading-relaxed"
-                        autoFocus
+                <div className="flex-1 p-4 overflow-hidden flex flex-col">
+                    <TipTapEditor
+                        content={text}
+                        onChange={setText}
                     />
                 </div>
 

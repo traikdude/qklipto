@@ -6,13 +6,14 @@ export interface Clip {
     fav: boolean;
     deleted: boolean;
     tags: string[]; // Array of tag names
+    folderId: string | null; // null = root level, otherwise folder ID
     createDate: string; // ISO 8601
     modifyDate: string; // ISO 8601
     syncVersion?: number;
     pendingSync?: boolean;
 }
 
-export const createClip = (text: string, title: string = ""): Clip => ({
+export const createClip = (text: string, title: string = "", folderId: string | null = null): Clip => ({
     id: crypto.randomUUID(),
     text,
     title,
@@ -20,6 +21,7 @@ export const createClip = (text: string, title: string = ""): Clip => ({
     fav: false,
     deleted: false,
     tags: [],
+    folderId,
     createDate: new Date().toISOString(),
     modifyDate: new Date().toISOString(),
     pendingSync: true

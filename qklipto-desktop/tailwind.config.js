@@ -8,23 +8,24 @@ export default {
         extend: {
             colors: {
                 clipto: {
-                    primary: '#f9aa33',      // Amber accent (from Android colorAccent)
-                    primaryDark: '#c17c00',  // Darker amber
-                    primaryLight: '#ffdd6d', // Lighter amber
-                    background: '#212121',   // Main background (colorPrimaryInverse)
-                    surface: '#2E3032',      // Card background (colorPrimary)
-                    surfaceLight: '#494B4C', // Elevated surfaces (colorPrimaryLight)
-                    divider: '#424242',      // Dividers
-                    text: '#ffffff',
-                    textSecondary: '#b3b3b3',
-                    textMuted: '#757575',
-                    error: '#ee494c',        // colorNegative
-                    success: '#49b483',      // colorPositive
-                    attention: '#FFC400',    // colorAttention
+                    primary: '#FF6B35',      // Spec Brand Primary
+                    primaryDark: '#E85A29',  // Spec Brand Dark
+                    primaryLight: '#FFA726', // Spec Brand Light
+                    background: '#212121',   // Keep dark background base
+                    surface: '#303030',      // Spec Dark Theme BG
+                    surfaceLight: '#424242', // Elevated
+                    divider: '#616161',      // Spec Grey 700
+                    text: '#FFFFFF',
+                    textSecondary: '#E0E0E0', // Spec Grey 300
+                    textMuted: '#9E9E9E',     // Spec Grey 500
+                    error: '#F44336',        // Spec Error
+                    success: '#4CAF50',      // Spec Success
+                    attention: '#FF9800',    // Spec Warning
                 }
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                sans: ['Roboto', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                mono: ['Source Code Pro', 'Consolas', 'monospace'],
             },
             fontSize: {
                 'title': ['18px', { lineHeight: '1.3', fontWeight: '500' }],
@@ -65,5 +66,7 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/typography'),
+    ],
 }

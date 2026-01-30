@@ -8,10 +8,21 @@ import { FavoritesList } from './components/clips/FavoritesList';
 import { TrashList } from './components/clips/TrashList';
 import { syncEngine } from './services/syncEngine';
 import { useSettingsStore } from './stores/settingsStore';
+import { useTheme } from './hooks/useTheme';
+import { initAuthListener } from './services/authService';
 
 function App() {
     const { currentView } = useUIStore();
     const { syncMode } = useSettingsStore();
+
+    // Apply theme settings to DOM
+    useTheme();
+
+    // Initialize auth listener
+    useEffect(() => {
+        const unsubscribe = initAuthListener();
+        return () => unsubscribe();
+    }, []);
 
     // Sync Loop
     useEffect(() => {

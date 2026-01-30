@@ -1,8 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Clip } from '../../models/Clip';
 import { useUIStore } from '../../stores/uiStore';
-import { Trash2, Copy, Check } from 'lucide-react'; // Fallback icons if SVG paths fail, but we'll use SVGs
+import { Trash2, Copy, Check, GripVertical } from 'lucide-react';
 import { useSettingsStore } from '../../stores/settingsStore';
 
 interface ClipCardProps {
@@ -12,6 +12,8 @@ interface ClipCardProps {
 }
 
 export const ClipCard: React.FC<ClipCardProps> = ({ clip, onSelect, toggleFavorite }) => {
+    const [isDragging, setIsDragging] = useState(false);
+
     // Determine icon based on content (simple heuristic since type is always "0" for now)
     const getIcon = () => {
         // Default Text Icon
@@ -21,11 +23,43 @@ export const ClipCard: React.FC<ClipCardProps> = ({ clip, onSelect, toggleFavori
     // Color logic (Default to Indigo for text)
     const typeColorClass = 'bg-indigo-900/20 text-indigo-400';
 
+    const handleDragStart = (e: React.DragEvent) => {
+        setIsDragging(true);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('application/json', JSON.stringify({
+            type: 'clip',
+            clipId: clip.id,
+            currentFolderId: clip.folderId
+        }));
+
+        // Create a custom drag image
+        const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+        dragImage.style.opacity = '0.5';
+        document.body.appendChild(dragImage);
+        e.dataTransfer.setDragImage(dragImage, 0, 0);
+        setTimeout(() => document.body.removeChild(dragImage), 0);
+    };
+
+    const handleDragEnd = () => {
+        setIsDragging(false);
+    };
+
     return (
         <div
-            onClick={() => onSelect?.(clip)}
-            className="group clip-card h-full flex flex-col cursor-pointer"
+            draggable
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onClick={() => !isDragging && onSelect?.(clip)}
+            className={`
+                group clip-card h-full flex flex-col cursor-pointer transition-all
+                ${isDragging ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}
+            `}
         >
+            {/* Drag Handle */}
+            <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <GripVertical size={16} className="text-clipto-textSecondary" />
+            </div>
+
             {/* Header: Icon + Favorite */}
             <div className="flex items-start justify-between mb-3">
                 <div className={`p-2 rounded ${typeColorClass}`}>

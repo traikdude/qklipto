@@ -41,6 +41,10 @@ interface UIState {
     editingClipId: string | null;
     openEditor: (clipId?: string) => void;
     closeEditor: () => void;
+
+    // Auth Dialog
+    authDialogOpen: boolean;
+    setAuthDialogOpen: (open: boolean) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -76,11 +80,11 @@ export const useUIStore = create<UIState>((set) => ({
         const newSelected = isSelected
             ? state.selectedClipIds.filter(id => id !== clipId)
             : [...state.selectedClipIds, clipId];
-        
+
         // Auto-exit selection mode if deselecting last item? (Optional, maybe keep it sticky for now)
-        return { 
+        return {
             selectedClipIds: newSelected,
-            selectionMode: newSelected.length > 0 || state.selectionMode 
+            selectionMode: newSelected.length > 0 || state.selectionMode
         };
     }),
     selectAllClips: (clipIds) => set({ selectionMode: true, selectedClipIds: clipIds }),
@@ -90,4 +94,8 @@ export const useUIStore = create<UIState>((set) => ({
     editingClipId: null,
     openEditor: (clipId) => set({ editorOpen: true, editingClipId: clipId || null }),
     closeEditor: () => set({ editorOpen: false, editingClipId: null }),
+
+    // Auth Dialog
+    authDialogOpen: false,
+    setAuthDialogOpen: (open) => set({ authDialogOpen: open }),
 }));

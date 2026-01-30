@@ -1,31 +1,183 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=Montserrat:wght@400;700&family=Noto+Sans:wght@400;700&family=Open+Sans:wght@400;700&family=Roboto:wght@400;700&family=Rubik:wght@400;700&family=Source+Code+Pro:wght@400;700&family=Ubuntu:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables for theming - LEGACY APP STYLE */
-:root {
-    --clipto-primary: #fbc02d;
-    /* Legacy Yellow */
-    --clipto-primary-dark: #c17900;
-    --clipto-primary-light: #ffdd4b;
+/* CSS Variables for theming - Chameleon Skin System */
+:root,
+[data-theme="default"] {
+    --clipto-primary: #FF6B35;
+    --clipto-primary-dark: #E85A29;
+    --clipto-primary-light: #FFA726;
     --clipto-background: #212121;
-    /* Main Content BG */
-    --clipto-surface: #1a1a1a;
-    /* Sidebar & Bottom Bar BG */
-    --clipto-surface-light: #2a2a2a;
-    /* Borders / Card Hover */
-    --clipto-divider: #2a2a2a;
-    --clipto-text: #e2e8f0;
-    /* Slate-200/300 */
-    --clipto-text-secondary: #94a3b8;
-    /* Slate-400/500 */
-    --clipto-text-muted: #64748b;
+    --clipto-surface: #303030;
+    --clipto-surface-light: #424242;
+    --clipto-divider: #616161;
+    --clipto-text: #FFFFFF;
+    --clipto-text-secondary: #E0E0E0;
+    --clipto-text-muted: #9E9E9E;
+}
+
+[data-theme="white"] {
+    --clipto-primary: #2196F3;
+    --clipto-primary-dark: #1976D2;
+    --clipto-primary-light: #64B5F6;
+    --clipto-background: #FFFFFF;
+    --clipto-surface: #F5F5F5;
+    --clipto-surface-light: #E0E0E0;
+    --clipto-divider: #BDBDBD;
+    --clipto-text: #212121;
+    --clipto-text-secondary: #424242;
+    --clipto-text-muted: #757575;
+}
+
+[data-theme="sepia"] {
+    --clipto-primary: #D4A574;
+    --clipto-primary-dark: #B8935F;
+    --clipto-primary-light: #E0BA8E;
+    --clipto-background: #F4ECD8;
+    --clipto-surface: #EFE4CE;
+    --clipto-surface-light: #E5D9C1;
+    --clipto-divider: #C9B899;
+    --clipto-text: #4A3C1F;
+    --clipto-text-secondary: #6B5A38;
+    --clipto-text-muted: #9B8B6B;
+}
+
+[data-theme="green"] {
+    --clipto-primary: #66BB6A;
+    --clipto-primary-dark: #4CAF50;
+    --clipto-primary-light: #81C784;
+    --clipto-background: #E8F5E9;
+    --clipto-surface: #C8E6C9;
+    --clipto-surface-light: #A5D6A7;
+    --clipto-divider: #81C784;
+    --clipto-text: #1B5E20;
+    --clipto-text-secondary: #2E7D32;
+    --clipto-text-muted: #558B2F;
+}
+
+[data-theme="pink"] {
+    --clipto-primary: #EC407A;
+    --clipto-primary-dark: #D81B60;
+    --clipto-primary-light: #F06292;
+    --clipto-background: #FCE4EC;
+    --clipto-surface: #F8BBD0;
+    --clipto-surface-light: #F48FB1;
+    --clipto-divider: #F06292;
+    --clipto-text: #880E4F;
+    --clipto-text-secondary: #AD1457;
+    --clipto-text-muted: #C2185B;
+}
+
+[data-theme="dark"] {
+    --clipto-primary: #FF6B35;
+    --clipto-primary-dark: #E85A29;
+    --clipto-primary-light: #FFA726;
+    --clipto-background: #1E1E1E;
+    --clipto-surface: #2D2D2D;
+    --clipto-surface-light: #3D3D3D;
+    --clipto-divider: #4D4D4D;
+    --clipto-text: #E0E0E0;
+    --clipto-text-secondary: #B0B0B0;
+    --clipto-text-muted: #808080;
+}
+
+[data-theme="dark-blue"] {
+    --clipto-primary: #42A5F5;
+    --clipto-primary-dark: #1E88E5;
+    --clipto-primary-light: #64B5F6;
+    --clipto-background: #0D1B2A;
+    --clipto-surface: #1B263B;
+    --clipto-surface-light: #263B52;
+    --clipto-divider: #415A77;
+    --clipto-text: #E0E1DD;
+    --clipto-text-secondary: #B0B3B8;
+    --clipto-text-muted: #778DA9;
+}
+
+[data-theme="dark-green"] {
+    --clipto-primary: #66BB6A;
+    --clipto-primary-dark: #4CAF50;
+    --clipto-primary-light: #81C784;
+    --clipto-background: #0D1F12;
+    --clipto-surface: #1B3A24;
+    --clipto-surface-light: #265234;
+    --clipto-divider: #3E6B4E;
+    --clipto-text: #E8F5E9;
+    --clipto-text-secondary: #B8D4BC;
+    --clipto-text-muted: #7FA586;
+}
+
+[data-theme="dark-blurple"] {
+    --clipto-primary: #7C4DFF;
+    --clipto-primary-dark: #651FFF;
+    --clipto-primary-light: #9575CD;
+    --clipto-background: #1A1625;
+    --clipto-surface: #2A2338;
+    --clipto-surface-light: #3A304B;
+    --clipto-divider: #57476B;
+    --clipto-text: #E8E3F0;
+    --clipto-text-secondary: #C3B8D8;
+    --clipto-text-muted: #9085A8;
+}
+
+[data-theme="amoled-black"] {
+    --clipto-primary: #FF6B35;
+    --clipto-primary-dark: #E85A29;
+    --clipto-primary-light: #FFA726;
+    --clipto-background: #000000;
+    --clipto-surface: #0A0A0A;
+    --clipto-surface-light: #1A1A1A;
+    --clipto-divider: #333333;
+    --clipto-text: #FFFFFF;
+    --clipto-text-secondary: #CCCCCC;
+    --clipto-text-muted: #999999;
 }
 
 @layer base {
     body {
         @apply bg-clipto-background text-clipto-text overflow-hidden;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-family: 'Roboto', 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Font Family Support */
+    body[data-font="default"] {
+        font-family: 'Roboto', 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body[data-font="alegreya"] {
+        font-family: 'Alegreya', serif;
+    }
+
+    body[data-font="noto-sans"] {
+        font-family: 'Noto Sans', sans-serif;
+    }
+
+    body[data-font="open-sans"] {
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    body[data-font="ubuntu"] {
+        font-family: 'Ubuntu', sans-serif;
+    }
+
+    body[data-font="roboto"] {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    body[data-font="rubik"] {
+        font-family: 'Rubik', sans-serif;
+    }
+
+    body[data-font="montserrat"] {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    body[data-font="source-code-pro"] {
+        font-family: 'Source Code Pro', monospace;
     }
 
     /* Focus styles for accessibility */

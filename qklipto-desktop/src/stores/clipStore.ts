@@ -10,6 +10,7 @@ interface ClipActions {
     deleteClip: (id: string) => Promise<void>;
     restoreClip: (id: string) => Promise<void>;
     hardDeleteClip: (id: string) => Promise<void>;
+    moveClipToFolder: (clipId: string, folderId: string | null) => Promise<void>;
 }
 
 export const useClipActions = create<ClipActions>(() => ({
@@ -28,13 +29,16 @@ export const useClipActions = create<ClipActions>(() => ({
     },
     hardDeleteClip: async (id) => {
         await db.clips.delete(id);
+    },
+    moveClipToFolder: async (clipId, folderId) => {
+        await db.clips.update(clipId, { folderId, modifyDate: new Date().toISOString(), pendingSync: true });
     }
 }));
 
 // Separated hook for reactive data
 export const useClipStore = () => {
     const { sortOption } = useUIStore();
-    
+
     const clips = useLiveQuery(async () => {
         // Handle sorting
         // Note: 'modifyDate' is indexed, so it's fast. 'text' is not indexed, so we sort in memory for now.

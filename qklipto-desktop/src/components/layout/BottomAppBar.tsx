@@ -43,11 +43,10 @@ export const BottomAppBar: React.FC = () => {
             <div className="relative">
                 <button
                     onClick={() => setFilterMenuOpen(!filterMenuOpen)}
-                    className={`p-3 rounded-full transition-colors ${
-                        activeFilter !== 'all'
+                    className={`p-3 rounded-full transition-colors ${activeFilter !== 'all'
                             ? 'bg-clipto-primary/20 text-clipto-primary'
                             : 'hover:bg-white/10 text-white'
-                    }`}
+                        }`}
                     aria-label="Filter"
                 >
                     <Filter size={24} />
@@ -107,19 +106,24 @@ export const BottomAppBar: React.FC = () => {
                             onClick={() => setMenuOpen(false)}
                         />
                         <div className="absolute bottom-full right-0 mb-2 bg-clipto-surfaceLight rounded-lg shadow-clipto-lg py-2 min-w-[160px] z-20">
-                            <MenuItem 
-                                icon={<SortAsc size={18} />} 
-                                label={sortOption.startsWith('date') ? `Sort by Date (${sortOption === 'date-desc' ? 'Newest' : 'Oldest'})` : "Sort by Date"} 
-                                onClick={handleSortDate} 
+                            <MenuItem
+                                icon={<SortAsc size={18} />}
+                                label={sortOption.startsWith('date') ? `Sort by Date (${sortOption === 'date-desc' ? 'Newest' : 'Oldest'})` : "Sort by Date"}
+                                onClick={handleSortDate}
                             />
-                            <MenuItem 
-                                icon={<SortDesc size={18} />} 
-                                label={sortOption.startsWith('name') ? `Sort by Name (${sortOption === 'name-asc' ? 'A-Z' : 'Z-A'})` : "Sort by Name"} 
-                                onClick={handleSortName} 
+                            <MenuItem
+                                icon={<SortDesc size={18} />}
+                                label={sortOption.startsWith('name') ? `Sort by Name (${sortOption === 'name-asc' ? 'A-Z' : 'Z-A'})` : "Sort by Name"}
+                                onClick={handleSortName}
                             />
                             <div className="h-px bg-clipto-divider my-1" />
                             <MenuItem icon={<CheckSquare size={18} />} label="Select All" onClick={handleSelectAll} />
-                            <MenuItem icon={<Download size={18} />} label="Export JSON" onClick={handleExport} />
+                            <div className="bg-clipto-surfaceLight/50 p-2 rounded mb-1">
+                                <MenuItem icon={<Download size={16} />} label="Export JSON" onClick={() => { setMenuOpen(false); exportData('json'); }} />
+                                <MenuItem icon={<Download size={16} />} label="Export Text" onClick={() => { setMenuOpen(false); exportData('txt'); }} />
+                                <MenuItem icon={<Download size={16} />} label="Export Markdown" onClick={() => { setMenuOpen(false); exportData('md'); }} />
+                                <MenuItem icon={<Download size={16} />} label="Export HTML" onClick={() => { setMenuOpen(false); exportData('html'); }} />
+                            </div>
                         </div>
                     </>
                 )}
@@ -141,9 +145,8 @@ const MenuItem = ({ icon, label, onClick }: { icon?: React.ReactNode; label: str
 const FilterMenuItem = ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => (
     <button
         onClick={onClick}
-        className={`w-full px-4 py-2 text-left transition-colors text-sm ${
-            active ? 'text-clipto-primary bg-clipto-primary/10' : 'text-white hover:bg-white/10'
-        }`}
+        className={`w-full px-4 py-2 text-left transition-colors text-sm ${active ? 'text-clipto-primary bg-clipto-primary/10' : 'text-white hover:bg-white/10'
+            }`}
     >
         {label}
     </button>
