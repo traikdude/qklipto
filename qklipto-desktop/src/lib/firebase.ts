@@ -13,13 +13,12 @@ export const initializeFirebase = (): { auth?: Auth; firestore?: Firestore } => 
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyASc7BqnRTnY5lFONxiaAhO5xBR0iIaGGg",
-    authDomain: "qklipto.firebaseapp.com",
-    projectId: "qklipto",
-    storageBucket: "qklipto.firebasestorage.app",
-    messagingSenderId: "766740489019",
-    appId: "1:766740489019:web:6bd3a6534721f70e864d1e",
-    measurementId: "G-1M4T202WF9"
+    apiKey: 'AIzaSyDeOcalVSuGg7BJwf5GD49HBUfBaXNxmc0',
+    authDomain: 'synapse-brigade.firebaseapp.com',
+    projectId: 'synapse-brigade',
+    storageBucket: 'synapse-brigade.firebasestorage.app',
+    messagingSenderId: '46376557580',
+    appId: '1:46376557580:web:abd5ba83c51bdeee382229'
 };
 
 // Singleton instance
